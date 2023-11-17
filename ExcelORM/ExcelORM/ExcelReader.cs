@@ -19,7 +19,6 @@ public class ExcelReader
         foreach (var row in rows)
         {
             if (SkipHidden && row.IsHidden) continue;
-            if (row.RowNumber() <= SkipFirstNRows) continue;
 
             var current = new T();
             foreach (var item in mapping)
@@ -71,12 +70,13 @@ public class ExcelReader
 
         if (ObeyFilter && worksheet.AutoFilter.IsEnabled)
         {
-            foreach (var item in ProcessRows<T>(worksheet.AutoFilter.VisibleRows.Select(x => x.WorksheetRow()), mapping))
+            foreach (var item in ProcessRows<T>(worksheet.AutoFilter.VisibleRows
+                         .Select(x => x.WorksheetRow()).Skip((int)SkipFirstNRows), mapping))
                 yield return item;
         }
         else
         {
-            foreach (var item in ProcessRows<T>(worksheet.RowsUsed(), mapping))
+            foreach (var item in ProcessRows<T>(worksheet.RowsUsed().Skip((int)SkipFirstNRows), mapping))
                 yield return item;
         }
     } 
