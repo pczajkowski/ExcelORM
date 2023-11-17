@@ -4,9 +4,9 @@ namespace ExcelORMTests;
 
 public class ReaderWriterTests
 {
-    private const string regularFile = "testFiles/first.xlsx";
-    private const string hiddenFile = "testFiles/hidden.xlsx";
-    private const string filteredFile = "testFiles/filtered.xlsx";
+    private const string RegularFile = "testFiles/first.xlsx";
+    private const string HiddenFile = "testFiles/hidden.xlsx";
+    private const string FilteredFile = "testFiles/filtered.xlsx";
 
     private class Test
     {
@@ -14,16 +14,16 @@ public class ReaderWriterTests
         public string? Name { get; set; }
 
         [Column("Last name")]
-        public string? Source { get; set; }
+        public string? Surname { get; set; }
 
-        [Column(new string[]{"Occupation", "Job"})]
-        public string? Target { get; set; }
+        [Column(new[]{"Occupation", "Job"})]
+        public string? Job { get; set; }
     }
     
     [Fact]
     public void Read()
     {
-        var reader = new ExcelReader(regularFile);
+        var reader = new ExcelReader(RegularFile);
         var results = reader.Read<Test>();
         Assert.NotNull(results);
         Assert.NotEmpty(results);
@@ -32,12 +32,12 @@ public class ReaderWriterTests
     [Fact]
     public void ReadHidden()
     {
-        var reader = new ExcelReader(hiddenFile);
+        var reader = new ExcelReader(HiddenFile);
         var results = reader.Read<Test>();
         Assert.NotNull(results);
         Assert.NotEmpty(results);
 
-        var readerHidden = new ExcelReader(hiddenFile) { SkipHidden = true };
+        var readerHidden = new ExcelReader(HiddenFile) { SkipHidden = true };
         var resultsHidden = readerHidden.Read<Test>();
         Assert.NotNull(resultsHidden);
         Assert.NotEmpty(resultsHidden);
@@ -47,12 +47,12 @@ public class ReaderWriterTests
     [Fact]
     public void ReadFiltered()
     {
-        var reader = new ExcelReader(filteredFile);
+        var reader = new ExcelReader(FilteredFile);
         var results = reader.Read<Test>();
         Assert.NotNull(results);
         Assert.NotEmpty(results);
 
-        var readerFiltered = new ExcelReader(filteredFile) { ObeyFilter = true };
+        var readerFiltered = new ExcelReader(FilteredFile) { ObeyFilter = true };
         var resultsFiltered = readerFiltered.Read<Test>();
         Assert.NotNull(resultsFiltered);
         Assert.NotEmpty(resultsFiltered);
