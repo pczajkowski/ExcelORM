@@ -5,7 +5,7 @@ namespace ExcelORMTests;
 public class ReaderWriterTests
 {
     private const string regularFile = "testFiles/first.xlsx";
-    private const string filteredFile = "testFiles/filtered.xlsx";
+    private const string hiddenFile = "testFiles/hidden.xlsx";
     
     class Test
     {
@@ -29,16 +29,17 @@ public class ReaderWriterTests
     }
     
     [Fact]
-    public void ReadFiltered()
+    public void ReadHidden()
     {
-        var reader = new ExcelReader(filteredFile);
+        var reader = new ExcelReader(hiddenFile);
         var results = reader.Read<Test>();
         Assert.NotNull(results);
         Assert.NotEmpty(results);
 
-        var readerFilter = new ExcelReader(filteredFile) { ObeyFilter = true };
-        var resultsFiltered = readerFilter.Read<Test>();
-        Assert.NotNull(resultsFiltered);
-        Assert.NotEmpty(resultsFiltered);
+        var readerHidden = new ExcelReader(hiddenFile) { SkipHidden = true };
+        var resultsHidden = readerHidden.Read<Test>();
+        Assert.NotNull(resultsHidden);
+        Assert.NotEmpty(resultsHidden);
+        Assert.NotEqual(results.Count(), resultsHidden.Count());
     }
 }

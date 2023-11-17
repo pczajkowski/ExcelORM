@@ -27,7 +27,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <None Update="testFiles\filtered.xlsx">
+      <None Update="testFiles\hidden.xlsx">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
       <None Update="testFiles\first.xlsx">
