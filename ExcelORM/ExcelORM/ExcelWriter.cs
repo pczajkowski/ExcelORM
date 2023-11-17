@@ -9,13 +9,10 @@ public class ExcelWriter
 
     public ExcelWriter(string? path = null)
     {
-        if (File.Exists(path))
-            xlWorkbook = new XLWorkbook(path);
-        else
-            xlWorkbook = new XLWorkbook();
+        xlWorkbook = File.Exists(path) ? new XLWorkbook(path) : new XLWorkbook();
     }
 
-    private uint GenerateHeader<T>(T value, IXLWorksheet worksheet, uint rowIndex = 1) where T : class, new()
+    private static uint GenerateHeader<T>(T value, IXLWorksheet worksheet, uint rowIndex = 1) where T : class, new()
     {
         var cellIndex = 1;
         var properties = value.GetType().GetProperties();
@@ -38,15 +35,16 @@ public class ExcelWriter
         Write(values, xlWorksheet, append, rowIndex);
     }
 
-    public void Write<T>(IEnumerable<T> values, IXLWorksheet worksheet, bool append = false, uint rowIndex = 1) where T : class, new()
+    private void Write<T>(IEnumerable<T> values, IXLWorksheet worksheet, bool append = false, uint rowIndex = 1) where T : class, new()
     {
         if (!values.Any()) return;
 
-        if (append)
-            rowIndex = (uint)worksheet.LastRowUsed().RowNumber() + 1;
-
-        if (!append && WriteHeader)
-            rowIndex = GenerateHeader(values.First(), worksheet);
+        rowIndex = append switch
+        {
+            true => (uint)worksheet.LastRowUsed().RowNumber() + 1,
+            false when WriteHeader => GenerateHeader(values.First(), worksheet),
+            _ => rowIndex
+        };
 
         foreach (var value in values)
         {

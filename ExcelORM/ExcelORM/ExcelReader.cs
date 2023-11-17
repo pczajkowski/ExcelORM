@@ -34,10 +34,8 @@ public class ExcelReader
 
                 switch (property.PropertyType)
                 {
-                    case Type _ when property.PropertyType == typeof(string):
+                    case not null when property.PropertyType == typeof(string):
                         property.SetValue(current, cell.Value.ToString());
-                        break;
-                    default:
                         break;
                 }
             }
