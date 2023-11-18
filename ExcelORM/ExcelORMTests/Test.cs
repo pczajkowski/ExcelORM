@@ -4,12 +4,12 @@ namespace ExcelORMTests;
 
 public record Test
 {
-    [Column("First name" )]
+    [Column("first name" )]
     public string? Name { get; set; }
 
-    [Column("Last name")]
+    [Column("Last Name")]
     public string? Surname { get; set; }
 
-    [Column(new[]{"Occupation", "Job"})]
+    [Column(new[]{"Occupation", "JoB"})]
     public string? Job { get; set; }
 }
