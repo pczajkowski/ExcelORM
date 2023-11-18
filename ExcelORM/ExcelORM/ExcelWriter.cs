@@ -28,8 +28,10 @@ public class ExcelWriter
     public void Write<T>(IEnumerable<T> values, string? worksheetName, bool append = false) where T : class, new()
     {
         var xlWorksheet = xlWorkbook.Worksheets.FirstOrDefault(x => x.Name.Equals(worksheetName, StringComparison.InvariantCultureIgnoreCase));
+        
         xlWorksheet ??= !string.IsNullOrWhiteSpace(worksheetName) ?
-            xlWorkbook.AddWorksheet(worksheetName) : xlWorkbook.AddWorksheet();
+            xlWorkbook.AddWorksheet(worksheetName)
+            : xlWorkbook.Worksheets.Count == 0 ? xlWorkbook.AddWorksheet() : xlWorkbook.Worksheets.First();
 
         Write(values, xlWorksheet, append);
     }
