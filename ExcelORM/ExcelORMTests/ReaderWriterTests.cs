@@ -24,8 +24,7 @@ public class ReaderWriterTests
     public void Read()
     {
         var reader = new ExcelReader(RegularFile);
-        var results = reader.Read<Test>();
-        Assert.NotNull(results);
+        var results = reader.Read<Test>().ToArray();
         Assert.NotEmpty(results);
     }
     
@@ -33,29 +32,25 @@ public class ReaderWriterTests
     public void ReadHidden()
     {
         var reader = new ExcelReader(HiddenFile);
-        var results = reader.Read<Test>();
-        Assert.NotNull(results);
+        var results = reader.Read<Test>().ToArray();
         Assert.NotEmpty(results);
 
         var readerHidden = new ExcelReader(HiddenFile) { SkipHidden = true };
-        var resultsHidden = readerHidden.Read<Test>();
-        Assert.NotNull(resultsHidden);
+        var resultsHidden = readerHidden.Read<Test>().ToArray();
         Assert.NotEmpty(resultsHidden);
-        Assert.NotEqual(results.Count(), resultsHidden.Count());
+        Assert.NotEqual(results.Length, resultsHidden.Length);
     }
     
     [Fact]
     public void ReadFiltered()
     {
         var reader = new ExcelReader(FilteredFile);
-        var results = reader.Read<Test>();
-        Assert.NotNull(results);
+        var results = reader.Read<Test>().ToArray();
         Assert.NotEmpty(results);
 
         var readerFiltered = new ExcelReader(FilteredFile) { ObeyFilter = true };
-        var resultsFiltered = readerFiltered.Read<Test>();
-        Assert.NotNull(resultsFiltered);
+        var resultsFiltered = readerFiltered.Read<Test>().ToArray();
         Assert.NotEmpty(resultsFiltered);
-        Assert.NotEqual(results.Count(), resultsFiltered.Count());
+        Assert.NotEqual(results.Length, resultsFiltered.Length);
     }
 }
