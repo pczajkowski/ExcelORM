@@ -37,16 +37,17 @@ public class ExcelWriter
 
     private void Write<T>(IEnumerable<T> values, IXLWorksheet worksheet, bool append = false, uint rowIndex = 1) where T : class, new()
     {
-        if (!values.Any()) return;
+        var enumerable = values as T[] ?? values.ToArray();
+        if (!enumerable.Any()) return;
 
         rowIndex = append switch
         {
             true => (uint)worksheet.LastRowUsed().RowNumber() + 1,
-            false when WriteHeader => GenerateHeader(values.First(), worksheet),
+            false when WriteHeader => GenerateHeader(enumerable.First(), worksheet),
             _ => rowIndex
         };
 
-        foreach (var value in values)
+        foreach (var value in enumerable)
         {
             var cellIndex = 1;
             var properties = value.GetType().GetProperties();
