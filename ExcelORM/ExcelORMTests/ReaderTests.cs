@@ -2,7 +2,7 @@ using ExcelORM;
 
 namespace ExcelORMTests;
 
-public class ReaderWriterTests
+public class ReaderTests
 {
     private const string RegularFile = "testFiles/first.xlsx";
     private const string HiddenFile = "testFiles/hidden.xlsx";
