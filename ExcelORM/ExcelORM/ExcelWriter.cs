@@ -25,7 +25,7 @@ public class ExcelWriter
         return ++rowIndex;
     }
 
-    public void Write<T>(IEnumerable<T> values, string? worksheetName, bool append = false) where T : class, new()
+    public void Write<T>(IEnumerable<T> values, string? worksheetName = null, bool append = false) where T : class, new()
     {
         var xlWorksheet = xlWorkbook.Worksheets.FirstOrDefault(x => x.Name.Equals(worksheetName, StringComparison.InvariantCultureIgnoreCase));
         
@@ -36,7 +36,7 @@ public class ExcelWriter
         Write(values, xlWorksheet, append);
     }
 
-    private void Write<T>(IEnumerable<T> values, IXLWorksheet worksheet, bool append = false) where T : class, new()
+    private void Write<T>(IEnumerable<T> values, IXLWorksheet worksheet, bool append) where T : class, new()
     {
         var enumerable = values as T[] ?? values.ToArray();
         if (!enumerable.Any()) return;

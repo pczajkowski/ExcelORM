@@ -35,7 +35,7 @@ public class WriterTests
         writer.SaveAs(testFile);
         
         reader = new ExcelReader(testFile);
-        Assert.Equal(5, reader.Read<Test>(worksheetName).Count());
+        Assert.Equal(5, reader.Read<Test>().Count());
         File.Delete(testFile);
     }
     
@@ -46,13 +46,13 @@ public class WriterTests
         testFile = Path.ChangeExtension(testFile, "xlsx");
 
         var writer = new ExcelWriter(testFile);
-        writer.Write(arrayOfThree, null);
+        writer.Write(arrayOfThree);
         writer.SaveAs(testFile);
 
         var reader = new ExcelReader(testFile);
         Assert.Equal(3, reader.Read<Test>().Count());
 
-        writer.Write(listOfTwo, null, true);
+        writer.Write(listOfTwo, append: true);
         writer.SaveAs(testFile);
         
         reader = new ExcelReader(testFile);
