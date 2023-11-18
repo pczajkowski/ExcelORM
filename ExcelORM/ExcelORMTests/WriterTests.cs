@@ -29,13 +29,13 @@ public class WriterTests
         writer.SaveAs(testFile);
 
         var reader = new ExcelReader(testFile);
-        Assert.Equal(3, reader.Read<Test>().Count());
+        Assert.Equal(3, reader.Read<Test>(worksheetName).Count());
 
         writer.Write(listOfTwo, worksheetName, true);
         writer.SaveAs(testFile);
         
         reader = new ExcelReader(testFile);
-        Assert.Equal(5, reader.Read<Test>().Count());
+        Assert.Equal(5, reader.Read<Test>(worksheetName).Count());
         File.Delete(testFile);
     }
     

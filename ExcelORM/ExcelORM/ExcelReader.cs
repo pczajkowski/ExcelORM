@@ -45,11 +45,7 @@ public class ExcelReader
 
     public IEnumerable<T> Read<T>() where T : class, new()
     {
-        foreach (var worksheet in xlWorkbook.Worksheets)
-        {
-            foreach (var value in Read<T>(worksheet))
-                yield return value;
-        }
+        return xlWorkbook.Worksheets.SelectMany(Read<T>);
     }
 
     public IEnumerable<T> Read<T>(string? worksheetName) where T : class, new()
