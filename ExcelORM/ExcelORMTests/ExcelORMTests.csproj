@@ -36,6 +36,9 @@
       <None Update="testFiles\filtered.xlsx">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
+      <None Update="testFiles\columnsOnTheLeftHeaderNotFirstRow.xlsx">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
 
     <ItemGroup>
