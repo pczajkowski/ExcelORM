@@ -8,17 +8,7 @@ public class ReaderTests
     private const string HiddenFile = "testFiles/hidden.xlsx";
     private const string FilteredFile = "testFiles/filtered.xlsx";
 
-    private class Test
-    {
-        [Column("First name" )]
-        public string? Name { get; set; }
-
-        [Column("Last name")]
-        public string? Surname { get; set; }
-
-        [Column(new[]{"Occupation", "Job"})]
-        public string? Job { get; set; }
-    }
+    
     
     [Fact]
     public void Read()
