@@ -61,7 +61,7 @@ public class ExcelReader
             yield return value;
     }
 
-    public IEnumerable<T> Read<T>(IXLWorksheet? worksheet) where T : class, new()
+    private IEnumerable<T> Read<T>(IXLWorksheet? worksheet) where T : class, new()
     {
         if (worksheet == null) yield break;
 

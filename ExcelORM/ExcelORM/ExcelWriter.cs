@@ -36,7 +36,7 @@ public class ExcelWriter
         Write(values, xlWorksheet, append);
     }
 
-    private void Write<T>(IEnumerable<T> values, IXLWorksheet worksheet, bool append) where T : class, new()
+    private static void Write<T>(IEnumerable<T> values, IXLWorksheet worksheet, bool append) where T : class, new()
     {
         var enumerable = values as T[] ?? values.ToArray();
         if (!enumerable.Any()) return;
