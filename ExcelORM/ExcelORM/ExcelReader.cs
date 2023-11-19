@@ -58,19 +58,18 @@ public class ExcelReader
         var mapping = Mapping.MapProperties<T>(worksheet.FirstRowUsed().CellsUsed());
         if (mapping == null) yield break;
 
-        if (ObeyFilter && worksheet.AutoFilter.IsEnabled)
+        var rowsToProcess = (ObeyFilter && worksheet.AutoFilter.IsEnabled) switch
         {
-            foreach (var item in ProcessRows<T>(worksheet.AutoFilter.VisibleRows
-                         .Where(x => x.RowNumber() >= startFrom)
-                         .Select(x => x.WorksheetRow()).Skip((int)skip), mapping))
-                yield return item;
-        }
-        else
-        {
-            foreach (var item in ProcessRows<T>(worksheet.RowsUsed()
-                         .Where(x => x.RowNumber() >= startFrom)
-                         .Skip((int)skip), mapping))
-                yield return item;
-        }
+            true => worksheet.AutoFilter.VisibleRows
+                .Select(x => x.WorksheetRow()),
+            false => worksheet.RowsUsed()
+                
+        };
+
+        rowsToProcess = rowsToProcess.Where(x => x.RowNumber() >= startFrom)
+            .Skip((int)skip);
+        
+        foreach (var item in ProcessRows<T>(rowsToProcess, mapping))
+            yield return item;
     } 
 }
