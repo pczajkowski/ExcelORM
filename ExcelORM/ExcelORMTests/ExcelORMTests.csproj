@@ -42,6 +42,9 @@
       <None Update="testFiles\multipleSheets.xlsx">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
+      <None Update="testFiles\differentTypes.xlsx">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
 
     <ItemGroup>

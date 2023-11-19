@@ -9,6 +9,7 @@ public class ReaderTests
     private const string FilteredFile = "testFiles/filtered.xlsx";
     private const string DifficultFile = "testFiles/columnsOnTheLeftHeaderNotFirstRow.xlsx";
     private const string MultipleSheetsFile = "testFiles/multipleSheets.xlsx";
+    private const string DifferentTypesFile = "testFiles/differentTypes.xlsx";
     
     [Fact]
     public void Read()
@@ -59,5 +60,13 @@ public class ReaderTests
         var results = reader.Read<Test>().ToArray();
         Assert.NotEmpty(results);
         Assert.Equal(6, results.Length);
+    }
+    
+    [Fact]
+    public void ReadDifferentTypes()
+    {
+        var reader = new ExcelReader(DifferentTypesFile);
+        var results = reader.Read<TestTypes>().ToArray();
+        Assert.NotEmpty(results);
     }
 }
