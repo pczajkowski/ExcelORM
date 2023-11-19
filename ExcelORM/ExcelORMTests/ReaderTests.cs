@@ -54,6 +54,9 @@ public class ReaderTests
 
         var resultsWithTitle = reader.Read<Test>("WithTitle", startFrom: 2).ToArray();
         Assert.Equal(results.Length, resultsWithTitle.Length);
+
+        var resultsBadHeader = reader.Read<Test>("BadHeader").ToArray();
+        Assert.Empty(resultsBadHeader);
     }
     
     [Fact]
