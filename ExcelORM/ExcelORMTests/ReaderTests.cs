@@ -49,8 +49,11 @@ public class ReaderTests
     public void ReadDifficult()
     {
         var reader = new ExcelReader(DifficultFile);
-        var results = reader.Read<Test>().ToArray();
+        var results = reader.Read<Test>("Tab").ToArray();
         Assert.NotEmpty(results);
+
+        var resultsWithTitle = reader.Read<Test>("WithTitle", startFrom: 2).ToArray();
+        Assert.Equal(results.Length, resultsWithTitle.Length);
     }
     
     [Fact]

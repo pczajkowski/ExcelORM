@@ -37,12 +37,12 @@ public class ExcelReader
         }
     }
 
-    public IEnumerable<T> Read<T>(uint startFrom = 1, uint skip = 1) where T : class, new()
+    public IEnumerable<T> Read<T>(uint startFrom = 1, uint skip = 0) where T : class, new()
     {
         return xlWorkbook.Worksheets.SelectMany(worksheet => Read<T>(worksheet, startFrom, skip));
     }
 
-    public IEnumerable<T> Read<T>(string? worksheetName, uint startFrom = 1, uint skip = 1) where T : class, new()
+    public IEnumerable<T> Read<T>(string? worksheetName, uint startFrom = 1, uint skip = 0) where T : class, new()
     {
         var worksheet = xlWorkbook.Worksheets.FirstOrDefault(x => x.Name.Equals(worksheetName, StringComparison.InvariantCultureIgnoreCase));
         if (worksheet == null) yield break;
@@ -55,18 +55,23 @@ public class ExcelReader
     {
         if (worksheet == null) yield break;
 
-        var mapping = Mapping.MapProperties<T>(worksheet.FirstRowUsed().CellsUsed());
+        var firstRow = worksheet.Row((int)startFrom);
+        if (firstRow.IsEmpty())
+            firstRow = worksheet.RowsUsed().First(x => x.RowNumber() > startFrom && !x.IsEmpty());
+        
+        var mapping = Mapping.MapProperties<T>(firstRow.CellsUsed());
         if (mapping == null) yield break;
 
         var rowsToProcess = (ObeyFilter && worksheet.AutoFilter.IsEnabled) switch
         {
             true => worksheet.AutoFilter.VisibleRows
+                .Where(x => x.RowNumber() > firstRow.RowNumber())
                 .Select(x => x.WorksheetRow()),
-            false => worksheet.RowsUsed()
+            false => worksheet.RowsUsed().Where(x => x.RowNumber() > firstRow.RowNumber())
                 
         };
 
-        rowsToProcess = rowsToProcess.Where(x => x.RowNumber() >= startFrom)
+        rowsToProcess = rowsToProcess
             .Skip((int)skip);
         
         foreach (var item in ProcessRows<T>(rowsToProcess, mapping))
