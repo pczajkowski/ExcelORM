@@ -1,4 +1,3 @@
-using System.Reflection;
 using ClosedXML.Excel;
 
 namespace ExcelORM;
@@ -6,7 +5,6 @@ namespace ExcelORM;
 public class ExcelReader
 {
     private readonly IXLWorkbook xlWorkbook;
-    public uint SkipFirstNRows { get; set; } = 1;
     public bool SkipHidden { get; set; }
     public bool ObeyFilter { get; set; }
 
@@ -39,21 +37,21 @@ public class ExcelReader
         }
     }
 
-    public IEnumerable<T> Read<T>() where T : class, new()
+    public IEnumerable<T> Read<T>(uint startFrom = 1, uint skip = 1) where T : class, new()
     {
-        return xlWorkbook.Worksheets.SelectMany(Read<T>);
+        return xlWorkbook.Worksheets.SelectMany(worksheet => Read<T>(worksheet, startFrom, skip));
     }
 
-    public IEnumerable<T> Read<T>(string? worksheetName) where T : class, new()
+    public IEnumerable<T> Read<T>(string? worksheetName, uint startFrom = 1, uint skip = 1) where T : class, new()
     {
         var worksheet = xlWorkbook.Worksheets.FirstOrDefault(x => x.Name.Equals(worksheetName, StringComparison.InvariantCultureIgnoreCase));
         if (worksheet == null) yield break;
 
-        foreach (var value in Read<T>(worksheet))
+        foreach (var value in Read<T>(worksheet, startFrom, skip))
             yield return value;
     }
 
-    private IEnumerable<T> Read<T>(IXLWorksheet? worksheet) where T : class, new()
+    private IEnumerable<T> Read<T>(IXLWorksheet? worksheet, uint startFrom, uint skip) where T : class, new()
     {
         if (worksheet == null) yield break;
 
@@ -63,12 +61,15 @@ public class ExcelReader
         if (ObeyFilter && worksheet.AutoFilter.IsEnabled)
         {
             foreach (var item in ProcessRows<T>(worksheet.AutoFilter.VisibleRows
-                         .Select(x => x.WorksheetRow()).Skip((int)SkipFirstNRows), mapping))
+                         .Where(x => x.RowNumber() >= startFrom)
+                         .Select(x => x.WorksheetRow()).Skip((int)skip), mapping))
                 yield return item;
         }
         else
         {
-            foreach (var item in ProcessRows<T>(worksheet.RowsUsed().Skip((int)SkipFirstNRows), mapping))
+            foreach (var item in ProcessRows<T>(worksheet.RowsUsed()
+                         .Where(x => x.RowNumber() >= startFrom)
+                         .Skip((int)skip), mapping))
                 yield return item;
         }
     } 
