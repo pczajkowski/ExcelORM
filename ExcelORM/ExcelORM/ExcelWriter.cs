@@ -10,11 +10,11 @@ public class ExcelWriter
         xlWorkbook = File.Exists(path) ? new XLWorkbook(path) : new XLWorkbook();
     }
 
-    private static int GenerateHeader<T>(T value, IXLWorksheet worksheet) where T : class, new()
+    private static int GenerateHeader<T>(IXLWorksheet worksheet) where T : class, new()
     {
         var rowIndex = 1;
         var cellIndex = 1;
-        var properties = value.GetType().GetProperties();
+        var properties = typeof(T).GetProperties();
         foreach (var property in properties)
         {
             var columnAttribute = property.GetCustomAttributes(typeof(ColumnAttribute), false).FirstOrDefault() as ColumnAttribute;
@@ -44,13 +44,13 @@ public class ExcelWriter
         var rowIndex = append switch
         {
             true => worksheet.LastRowUsed().RowNumber() + 1,
-            false => GenerateHeader(enumerable.First(), worksheet),
+            false => GenerateHeader<T>(worksheet),
         };
 
         foreach (var value in enumerable)
         {
             var cellIndex = 1;
-            var properties = value.GetType().GetProperties();
+            var properties = typeof(T).GetProperties();
             foreach (var property in properties)
             {
                 worksheet.Cell(rowIndex, cellIndex).Value = property.GetValue(value) as string;

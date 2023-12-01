@@ -11,9 +11,8 @@ namespace ExcelORM
         {
             if (headerCells == null || !headerCells.Any()) return null;
 
-            var objectToRead = new T();
             var map = new List<Mapping>();
-            var properties = objectToRead.GetType().GetProperties();
+            var properties = typeof(T).GetProperties();
             foreach (var property in properties)
             {
                 var position = property.GetCustomAttributes(typeof(ColumnAttribute), false).FirstOrDefault() is ColumnAttribute { Names.Length: > 0 } columnAttribute

@@ -20,6 +20,7 @@ public class ExcelReader
             if (SkipHidden && row.IsHidden) continue;
 
             var current = new T();
+            var type = typeof(T);
             foreach (var item in mapping)
             {
                 if (item.Position == null || item.PropertyName == null) continue;
@@ -27,7 +28,7 @@ public class ExcelReader
                 var cell = row.Cell(item.Position.Value);
                 if (cell == null || cell.Value.IsBlank) continue;
 
-                var property = current.GetType().GetProperty(item.PropertyName);
+                var property = type.GetProperty(item.PropertyName);
                 if (property == null) continue;
 
                 current.SetValue(property, cell);
