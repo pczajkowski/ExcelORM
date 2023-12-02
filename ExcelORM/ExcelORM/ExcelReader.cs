@@ -15,12 +15,12 @@ public class ExcelReader
 
     private IEnumerable<T> ProcessRows<T>(IEnumerable<IXLRow> rows, List<Mapping> mapping) where T : class, new()
     {
+        var type = typeof(T);
         foreach (var row in rows)
         {
             if (SkipHidden && row.IsHidden) continue;
 
             var current = new T();
-            var type = typeof(T);
             foreach (var item in mapping)
             {
                 if (item.Position == null || item.PropertyName == null) continue;
