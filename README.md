@@ -1,4 +1,4 @@
-# ExcelOrm
+# ExcelORM
 
 They say that if you want have something done right better do it yourself. This is usually not true for software development, but recently I’ve encountered a peculiar issue with my favorite Excel ORM library ([Npoi.Mapper](https://github.com/donnytian/Npoi.Mapper)). For all the users, apart from myself, it was reading only first 170 rows. Why 170, and why only for them, I don’t know. But as I work with Excel files at work constantly and always wanted to play with such thing I’ve decided to create my own, very crude, Excel ORM.
 
