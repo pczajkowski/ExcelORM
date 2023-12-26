@@ -5,10 +5,21 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <Version>1.0.1</Version>
+        <PackageProjectUrl>https://git.liox.eu/pczajkowski/ExcelORM</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/pczajkowski/ExcelORM</RepositoryUrl>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+	<PackageReadmeFile>README.md</PackageReadmeFile>
+	<PackageLicenseFile>LICENSE</PackageLicenseFile>
+	<Title>ExcelORM</Title>
+	<Authors>Piotr Czajkowski</Authors>
+	<Description>Simple library to read/write C# objects from/to Excel files. </Description>
+	<RepositoryType>GitHub</RepositoryType>
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="ClosedXML" Version="0.102.1" />
+	    <PackageReference Include="ClosedXML" Version="0.102.1" />
+	    <None Include="../../README.md" Pack="true" PackagePath="\"/>
+	    <None Include="../../LICENSE" Pack="true" PackagePath=""/>
     </ItemGroup>
 
 </Project>
