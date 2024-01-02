@@ -17,10 +17,8 @@ namespace ExcelORM
             foreach (var property in properties)
             {
                 int? position;
-                var attribute =
-                    property.GetCustomAttributes(typeof(ColumnAttribute), false).FirstOrDefault() as ColumnAttribute;
-                        
-                if (attribute is { Names.Length: > 0 })
+
+                if (property.GetCustomAttributes(typeof(ColumnAttribute), false).FirstOrDefault() is ColumnAttribute { Names.Length: > 0 } attribute)
                     position = headerCells.FirstOrDefault(x => !x.Value.IsBlank && Array.Exists(attribute.Names,
                             y => y.Equals(x.Value.ToString(), StringComparison.InvariantCultureIgnoreCase)))?.Address
                         .ColumnNumber;
