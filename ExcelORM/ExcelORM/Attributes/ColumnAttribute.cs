@@ -1,4 +1,4 @@
-﻿namespace ExcelORM
+﻿namespace ExcelORM.Attributes
 {
     [AttributeUsage(AttributeTargets.Property)]
     public class ColumnAttribute : Attribute
@@ -7,7 +7,7 @@
 
         public ColumnAttribute(string name)
         {
-            Names = new string[] { name };
+            Names = new[] { name };
         }
 
         public ColumnAttribute(string[] names)

@@ -1,4 +1,4 @@
-using ExcelORM;
+using ExcelORM.Attributes;
 
 namespace ExcelORMTests;
 
