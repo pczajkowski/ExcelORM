@@ -16,19 +16,22 @@ namespace ExcelORM
             var properties = typeof(T).GetProperties();
             foreach (var property in properties)
             {
-                var position = property.GetCustomAttributes(typeof(ColumnAttribute), false).FirstOrDefault() is ColumnAttribute { Names.Length: > 0 } columnAttribute
-                    ?
-                    headerCells.FirstOrDefault(x => !x.Value.IsBlank && Array.Exists(columnAttribute.Names, y => y.Equals(x.Value.ToString(), StringComparison.InvariantCultureIgnoreCase)))?.Address.ColumnNumber
-                    : headerCells.FirstOrDefault(x => !x.Value.IsBlank && x.Value.ToString().Equals(property.Name, StringComparison.InvariantCultureIgnoreCase))?.Address.ColumnNumber;
+                int? position;
+                var attribute =
+                    property.GetCustomAttributes(typeof(ColumnAttribute), false).FirstOrDefault() as ColumnAttribute;
+                        
+                if (attribute is { Names.Length: > 0 })
+                    position = headerCells.FirstOrDefault(x => !x.Value.IsBlank && Array.Exists(attribute.Names,
+                            y => y.Equals(x.Value.ToString(), StringComparison.InvariantCultureIgnoreCase)))?.Address
+                        .ColumnNumber;
+                else
+                    position = headerCells.FirstOrDefault(x => !x.Value.IsBlank && property.Name.Equals(x.Value.ToString(), StringComparison.InvariantCultureIgnoreCase))?.Address.ColumnNumber;
 
                 if (position == null) continue;
                 map.Add(new Mapping { PropertyName = property.Name, Position = position });
             }
 
-            if (map.Count == properties.Length)
-                return map;
-
-            return null;
+            return map.Count == properties.Length ? map : null;
         }
     }
 }
