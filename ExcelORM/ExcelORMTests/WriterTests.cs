@@ -59,4 +59,38 @@ public class WriterTests
         Assert.Equal(5, reader.Read<Test>().Count());
         File.Delete(testFile);
     }
+    
+    [Fact]
+    public void WriteDifferentTypes()
+    {
+        var testFile = Path.GetRandomFileName();
+        testFile = Path.ChangeExtension(testFile, "xlsx");
+
+        var expected = new TestTypes
+        {
+            Date = DateTime.Now,
+            TimeSpan = TimeSpan.MaxValue,
+            Double = 2.33,
+            Int = 1024,
+            Text = "Test"
+        };
+        
+        var list = new List<TestTypes>{ expected };
+        
+        var writer = new ExcelWriter(testFile);
+        writer.Write(list);
+        writer.SaveAs(testFile);
+
+        var reader = new ExcelReader(testFile);
+        var result = reader.Read<TestTypes>().ToList();
+        Assert.Single(result);
+        var first = result.First();
+        Assert.Equal(expected.Date.ToString(), first.Date.ToString());
+        Assert.Equal(expected.TimeSpan, first.TimeSpan);
+        Assert.Equal(expected.Double, first.Double);
+        Assert.Equal(expected.Int, first.Int);
+        Assert.Equal(expected.Text, first.Text);
+
+        File.Delete(testFile);
+    }
 }

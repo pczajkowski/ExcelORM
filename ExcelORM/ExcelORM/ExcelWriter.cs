@@ -54,7 +54,10 @@ public class ExcelWriter
             var properties = typeof(T).GetProperties();
             foreach (var property in properties)
             {
-                worksheet.Cell(rowIndex, cellIndex).Value = property.GetValue(value) as string;
+                var valueToSet = property.GetValue(value);
+                if (valueToSet == null) continue;
+                
+                worksheet.Cell(rowIndex, cellIndex).SetCellValue(property, valueToSet);
                 cellIndex++;
             }
 

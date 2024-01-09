@@ -20,4 +20,19 @@ public static class TypeExtensions
         if (valueToSet != null)
             property.SetValue(currentObject, valueToSet); 
     }
+
+    public static void SetCellValue(this IXLCell cell, PropertyInfo property, object? valueToSet)
+    {
+        if (valueToSet == null) return;
+        
+        cell.Value = property.PropertyType switch
+        {
+            not null when property.PropertyType == typeof(string) => valueToSet as string,
+            not null when property.PropertyType == typeof(DateTime?) => valueToSet as DateTime?,
+            not null when property.PropertyType == typeof(TimeSpan?) => valueToSet as TimeSpan?,
+            not null when property.PropertyType == typeof(double?) => valueToSet as double?,
+            not null when property.PropertyType == typeof(int?) => valueToSet as int?,
+            _ => throw new NotSupportedException($"{property.PropertyType} isn't supported!")
+        };
+    }
 }
