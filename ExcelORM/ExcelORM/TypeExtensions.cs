@@ -3,21 +3,37 @@ using ClosedXML.Excel;
 
 namespace ExcelORM;
 
+// Borrowed from https://github.com/ClosedXML/ClosedXML/blob/develop/ClosedXML/Excel/XLCellValue.cs#L361
 public static class TypeExtensions
 {
-    public static void SetValue<T>(this T currentObject, PropertyInfo property, IXLCell cell)
+    private static object? ToObject(this XLCellValue value)
     {
-        object? valueToSet = property.PropertyType switch
+        return value.Type switch
         {
-            not null when property.PropertyType == typeof(string) => cell.Value.ToString(),
-            not null when property.PropertyType == typeof(DateTime?) => cell.Value.IsDateTime ? cell.Value.GetDateTime() : null,
-            not null when property.PropertyType == typeof(TimeSpan?) => cell.Value.IsTimeSpan ? cell.Value.GetTimeSpan() : null,
-            not null when property.PropertyType == typeof(double?) => cell.Value.IsNumber ? cell.Value.GetNumber() : null,
-            not null when property.PropertyType == typeof(int?) => cell.Value.IsNumber ? (int?)cell.Value.GetNumber() : null,
-            _ => throw new NotSupportedException($"{property.PropertyType} isn't supported!")
+            XLDataType.Blank => null,
+            XLDataType.Boolean => value.GetBoolean(),
+            XLDataType.Number => value.GetNumber(),
+            XLDataType.Text => value.GetText(),
+            XLDataType.Error => value.GetError(),
+            XLDataType.DateTime => value.GetDateTime(),
+            XLDataType.TimeSpan => value.GetTimeSpan(),
+            _ => throw new InvalidCastException()
         };
-               
-        if (valueToSet != null)
-            property.SetValue(currentObject, valueToSet); 
+    }
+
+    public static void SetPropertyValue<T>(this T currentObject, PropertyInfo property, XLCellValue value)
+    {
+        var valueToSet = value.ToObject();
+        if (valueToSet == null) return;
+
+        try
+        {
+            property.SetValue(currentObject, valueToSet);
+        }
+        catch
+        {
+            valueToSet = value.ToString();
+            property.SetValue(currentObject, valueToSet);
+        }
     }
 }

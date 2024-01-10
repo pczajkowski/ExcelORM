@@ -31,7 +31,7 @@ public class ExcelReader
                 var property = type.GetProperty(item.PropertyName);
                 if (property == null) continue;
 
-                current.SetValue(property, cell);
+                current.SetPropertyValue(property, cell.Value);
             }
 
             yield return current;
