@@ -57,7 +57,7 @@ public class ExcelWriter
                 var valueToSet = property.GetValue(value);
                 if (valueToSet == null) continue;
                 
-                worksheet.Cell(rowIndex, cellIndex).SetCellValue(property, valueToSet);
+                worksheet.Cell(rowIndex, cellIndex).Value = XLCellValue.FromObject(valueToSet);
                 cellIndex++;
             }
 
