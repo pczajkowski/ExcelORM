@@ -8,4 +8,13 @@ Check test cases to get an idea of how you should use this library. I may add so
 
 There’s one limitation in ClosedXML where it produces Excel files incompatible either with [Aspose.Cells](https://products.aspose.com/cells/) or with a tool I’m using which uses Aspose.Cells for reading Excel files. Hence, I’ve added IExcelConverter to allow me to workaround it in my tools. You’ll probably not have to use it though.
 
+It currently supports properties of types as supported by ClosedXML, so:
+- bool
+- double
+- string
+- DateTime
+- TimeSpan
+
+And thanks to my "trick" also their nullable variants.
+
 As always, feel free to use it however you desire. But I provide you with no guarantee whatsoever. Enjoy!
