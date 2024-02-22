@@ -3,9 +3,9 @@ using ClosedXML.Excel;
 
 namespace ExcelORM;
 
-// Borrowed from https://github.com/ClosedXML/ClosedXML/blob/develop/ClosedXML/Excel/XLCellValue.cs#L361
 public static class TypeExtensions
 {
+    // Borrowed from https://github.com/ClosedXML/ClosedXML/blob/develop/ClosedXML/Excel/XLCellValue.cs#L361
     private static object? ToObject(this XLCellValue value)
     {
         return value.Type switch
@@ -17,6 +17,20 @@ public static class TypeExtensions
             XLDataType.Error => value.GetError(),
             XLDataType.DateTime => value.GetDateTime(),
             XLDataType.TimeSpan => value.GetTimeSpan(),
+            _ => throw new InvalidCastException()
+        };
+    }
+
+    private static Type ValueType(this XLCellValue value)
+    {
+        return value.Type switch
+        {
+            XLDataType.Blank => typeof(string),
+            XLDataType.Boolean => typeof(bool),
+            XLDataType.Number => typeof(double?),
+            XLDataType.Text => typeof(string),
+            XLDataType.DateTime => typeof(DateTime?),
+            XLDataType.TimeSpan => typeof(TimeSpan?),
             _ => throw new InvalidCastException()
         };
     }
