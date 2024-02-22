@@ -6,7 +6,7 @@ namespace ExcelORM;
 public static class TypeExtensions
 {
     // Borrowed from https://github.com/ClosedXML/ClosedXML/blob/develop/ClosedXML/Excel/XLCellValue.cs#L361
-    private static object? ToObject(this XLCellValue value)
+    public static object? ToObject(this XLCellValue value)
     {
         return value.Type switch
         {
@@ -21,7 +21,7 @@ public static class TypeExtensions
         };
     }
 
-    private static Type ValueType(this XLCellValue value)
+    public static Type ValueType(this XLCellValue value)
     {
         return value.Type switch
         {

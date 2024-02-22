@@ -1,0 +1,68 @@
+using ClosedXML.Excel;
+using ExcelORM.Models;
+
+namespace ExcelORM;
+
+public class ExcelDynamicReader
+{
+    private readonly IXLWorkbook xlWorkbook;
+    public bool SkipHidden { get; set; }
+    public bool ObeyFilter { get; set; }
+
+    public ExcelDynamicReader(string? path)
+    {
+        xlWorkbook = new XLWorkbook(path);
+    }
+
+    private IEnumerable<List<DynamicCell>> ProcessRows(IEnumerable<IXLRow> rows, List<DynamicCell> mapping)
+    {
+        foreach (var row in rows)
+        {
+            if (SkipHidden && row.IsHidden) continue;
+
+            var dynamicRow = new List<DynamicCell>();
+            foreach (var item in mapping)
+            {
+                var cell = row.Cell(item.Position);
+                if (cell == null || cell.Value.IsBlank) continue;
+
+                var cellItem = item with
+                {
+                    Value = cell.Value.ToObject()
+                };
+
+                dynamicRow.Add(cellItem);
+            }
+
+            yield return dynamicRow;
+        }
+    }
+
+    public IEnumerable<List<DynamicCell>> Read(string? worksheetName, uint startFrom = 1, uint skip = 0)
+    {
+        var worksheet = xlWorkbook.Worksheets.FirstOrDefault(x => x.Name.Equals(worksheetName, StringComparison.InvariantCultureIgnoreCase));
+        if (worksheet == null) yield break;
+
+        var firstRow = worksheet.Row((int)startFrom);
+        if (firstRow.IsEmpty())
+            firstRow = worksheet.RowsUsed().First(x => x.RowNumber() > startFrom && !x.IsEmpty());
+        
+        var mapping = DynamicCell.MapHeader(firstRow.CellsUsed());
+        if (mapping == null || mapping.Count == 0) yield break;
+
+        var rowsToProcess = (ObeyFilter && worksheet.AutoFilter.IsEnabled) switch
+        {
+            true => worksheet.AutoFilter.VisibleRows
+                .Where(x => x.RowNumber() > firstRow.RowNumber())
+                .Select(x => x.WorksheetRow()),
+            false => worksheet.RowsUsed().Where(x => x.RowNumber() > firstRow.RowNumber())
+                
+        };
+
+        rowsToProcess = rowsToProcess
+            .Skip((int)skip);
+        
+        foreach (var item in ProcessRows(rowsToProcess, mapping))
+            yield return item;
+    } 
+}
