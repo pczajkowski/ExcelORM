@@ -63,7 +63,7 @@ public class ReaderTests
     public void ReadMultipleSheets()
     {
         var reader = new ExcelReader(MultipleSheetsFile);
-        var results = reader.Read<Test>().ToArray();
+        var results = reader.ReadAll<Test>().ToArray();
         Assert.NotEmpty(results);
         Assert.Equal(6, results.Length);
     }

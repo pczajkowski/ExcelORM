@@ -1,4 +1,5 @@
 using ClosedXML.Excel;
+using ExcelORM.Models;
 
 namespace ExcelORM;
 
@@ -38,11 +39,6 @@ public class ExcelReader
         }
     }
 
-    public IEnumerable<T> Read<T>(uint startFrom = 1, uint skip = 0) where T : class, new()
-    {
-        return xlWorkbook.Worksheets.SelectMany(worksheet => Read<T>(worksheet, startFrom, skip));
-    }
-
     public IEnumerable<T> Read<T>(string? worksheetName, uint startFrom = 1, uint skip = 0) where T : class, new()
     {
         var worksheet = xlWorkbook.Worksheets.FirstOrDefault(x => x.Name.Equals(worksheetName, StringComparison.InvariantCultureIgnoreCase));
@@ -50,6 +46,26 @@ public class ExcelReader
 
         foreach (var value in Read<T>(worksheet, startFrom, skip))
             yield return value;
+    }
+
+    public IEnumerable<T> Read<T>(int worksheetIndex = 1, uint startFrom = 1, uint skip = 0) where T : class, new()
+    {
+        if (worksheetIndex > xlWorkbook.Worksheets.Count) yield break;
+
+        var worksheet = xlWorkbook.Worksheets.FirstOrDefault(x => x.Position == worksheetIndex);
+        if (worksheet == null) yield break;
+
+        foreach (var value in Read<T>(worksheet, startFrom, skip))
+            yield return value;
+    }
+
+    public IEnumerable<T> ReadAll<T>(uint startFrom = 1, uint skip = 0) where T : class, new()
+    {
+        foreach (var worksheet in xlWorkbook.Worksheets)
+        {
+            foreach (var item in Read<T>(worksheet, startFrom, skip))
+                yield return item;
+        }
     }
 
     private IEnumerable<T> Read<T>(IXLWorksheet? worksheet, uint startFrom, uint skip) where T : class, new()
