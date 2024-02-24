@@ -60,6 +60,19 @@ public class ExcelDynamicReader
             yield return value;
     }
 
+    public IEnumerable<DynamicWorksheet> ReadAll(uint startFrom = 1, uint skip = 0)
+    {
+        foreach (var worksheet in xlWorkbook.Worksheets)
+        {
+            yield return new DynamicWorksheet
+            {
+                Name = worksheet.Name,
+                Position = worksheet.Position,
+                Cells = Read(worksheet, startFrom, skip)
+            };
+        }
+    }
+
     private IEnumerable<List<DynamicCell>> Read(IXLWorksheet? worksheet, uint startFrom = 1, uint skip = 0)
     {
         if (worksheet == null) yield break;

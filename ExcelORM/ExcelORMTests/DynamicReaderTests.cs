@@ -6,6 +6,7 @@ public class DynamicReaderTests
 {
     private const string RegularFile = "testFiles/first.xlsx";
     private const string DifferentTypesFile = "testFiles/differentTypes.xlsx";
+    private const string MultipleSheetsFile = "testFiles/multipleSheets.xlsx";
 
     [Fact]
     public void Read()
@@ -28,5 +29,13 @@ public class DynamicReaderTests
         Assert.Equal(typeof(TimeSpan?), first[2].Type);
         Assert.Equal(typeof(double?), first[3].Type);
         Assert.Equal(typeof(double?), first[4].Type);
+    }
+
+    [Fact]
+    public void ReadAll()
+    {
+        var reader = new ExcelDynamicReader(MultipleSheetsFile);
+        var results = reader.ReadAll().ToArray();
+        Assert.NotEmpty(results);
     }
 }
