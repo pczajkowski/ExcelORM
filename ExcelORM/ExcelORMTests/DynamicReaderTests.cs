@@ -19,7 +19,7 @@ public class DynamicReaderTests
     public void ReadDifferentTypes()
     {
         var reader = new ExcelDynamicReader(DifferentTypesFile);
-        var results = reader.Read("Sheet1").ToArray();
+        var results = reader.Read().ToArray();
         Assert.NotEmpty(results);
 
         var first = results.First();

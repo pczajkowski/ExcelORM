@@ -49,6 +49,17 @@ public class ExcelDynamicReader
             yield return value;
     }
 
+    public IEnumerable<List<DynamicCell>> Read(int worksheetIndex = 1, uint startFrom = 1, uint skip = 0)
+    {
+        if (worksheetIndex > xlWorkbook.Worksheets.Count) yield break;
+
+        var worksheet = xlWorkbook.Worksheets.FirstOrDefault(x => x.Position == worksheetIndex);
+        if (worksheet == null) yield break;
+
+        foreach (var value in Read(worksheet, startFrom, skip))
+            yield return value;
+    }
+
     private IEnumerable<List<DynamicCell>> Read(IXLWorksheet? worksheet, uint startFrom = 1, uint skip = 0)
     {
         if (worksheet == null) yield break;
