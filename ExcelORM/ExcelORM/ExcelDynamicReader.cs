@@ -26,6 +26,8 @@ public class ExcelDynamicReader
                 var cell = row.Cell(item.Position);
                 if (cell == null || cell.Value.IsBlank) continue;
 
+                if (item.Type == null) item.Type = cell.Value.ValueType();
+
                 var cellItem = item with
                 {
                     Value = cell.Value.ToObject()
