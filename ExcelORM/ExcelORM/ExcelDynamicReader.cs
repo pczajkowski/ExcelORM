@@ -45,6 +45,14 @@ public class ExcelDynamicReader
         var worksheet = xlWorkbook.Worksheets.FirstOrDefault(x => x.Name.Equals(worksheetName, StringComparison.InvariantCultureIgnoreCase));
         if (worksheet == null) yield break;
 
+        foreach (var value in Read(worksheet, startFrom, skip))
+            yield return value;
+    }
+
+    private IEnumerable<List<DynamicCell>> Read(IXLWorksheet? worksheet, uint startFrom = 1, uint skip = 0)
+    {
+        if (worksheet == null) yield break;
+
         var firstRow = worksheet.Row((int)startFrom);
         if (firstRow.IsEmpty())
             firstRow = worksheet.RowsUsed().First(x => x.RowNumber() > startFrom && !x.IsEmpty());
