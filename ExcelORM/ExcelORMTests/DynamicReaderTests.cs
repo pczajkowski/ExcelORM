@@ -7,6 +7,7 @@ public class DynamicReaderTests
     private const string RegularFile = "testFiles/first.xlsx";
     private const string DifferentTypesFile = "testFiles/differentTypes.xlsx";
     private const string MultipleSheetsFile = "testFiles/multipleSheets.xlsx";
+    private const string DifficultFile = "testFiles/dynamicDifficult.xlsx";
 
     [Fact]
     public void Read()
@@ -37,5 +38,14 @@ public class DynamicReaderTests
         var reader = new ExcelDynamicReader(MultipleSheetsFile);
         var results = reader.ReadAll().ToArray();
         Assert.NotEmpty(results);
+    }
+
+    [Fact]
+    public void ReadDifficult()
+    {
+        var reader = new ExcelDynamicReader(DifficultFile);
+        var results = reader.Read().ToArray();
+        Assert.NotEmpty(results);
+        Assert.Equal(results.First().Count, results.Last().Count);
     }
 }
