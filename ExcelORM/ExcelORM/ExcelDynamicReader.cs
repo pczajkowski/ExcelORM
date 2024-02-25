@@ -24,7 +24,11 @@ public class ExcelDynamicReader
             foreach (var item in mapping)
             {
                 var cell = row.Cell(item.Position);
-                if (cell == null || cell.Value.IsBlank) continue;
+                if (cell == null || cell.Value.IsBlank)
+                {
+                    dynamicRow.Add(item);
+                    continue;
+                }
 
                 if (item.Type == null) item.Type = cell.Value.ValueType();
 
