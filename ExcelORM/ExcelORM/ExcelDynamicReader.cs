@@ -44,6 +44,33 @@ public class ExcelDynamicReader
         }
     }
 
+    private IEnumerable<List<DynamicCell>> Read(IXLWorksheet? worksheet, uint startFrom = 1, uint skip = 0)
+    {
+        if (worksheet == null) yield break;
+
+        var firstRow = worksheet.Row((int)startFrom);
+        if (firstRow.IsEmpty())
+            firstRow = worksheet.RowsUsed().First(x => x.RowNumber() > startFrom && !x.IsEmpty());
+
+        var mapping = DynamicCell.MapHeader(firstRow.CellsUsed());
+        if (mapping == null || mapping.Count == 0) yield break;
+
+        var rowsToProcess = (ObeyFilter && worksheet.AutoFilter.IsEnabled) switch
+        {
+            true => worksheet.AutoFilter.VisibleRows
+                .Where(x => x.RowNumber() > firstRow.RowNumber())
+                .Select(x => x.WorksheetRow()),
+            false => worksheet.RowsUsed().Where(x => x.RowNumber() > firstRow.RowNumber())
+
+        };
+
+        rowsToProcess = rowsToProcess
+            .Skip((int)skip);
+
+        foreach (var item in ProcessRows(rowsToProcess, mapping))
+            yield return item;
+    }
+
     public IEnumerable<List<DynamicCell>> Read(string? worksheetName, uint startFrom = 1, uint skip = 0)
     {
         var worksheet = xlWorkbook.Worksheets.FirstOrDefault(x => x.Name.Equals(worksheetName, StringComparison.InvariantCultureIgnoreCase));
@@ -76,31 +103,4 @@ public class ExcelDynamicReader
             };
         }
     }
-
-    private IEnumerable<List<DynamicCell>> Read(IXLWorksheet? worksheet, uint startFrom = 1, uint skip = 0)
-    {
-        if (worksheet == null) yield break;
-
-        var firstRow = worksheet.Row((int)startFrom);
-        if (firstRow.IsEmpty())
-            firstRow = worksheet.RowsUsed().First(x => x.RowNumber() > startFrom && !x.IsEmpty());
-        
-        var mapping = DynamicCell.MapHeader(firstRow.CellsUsed());
-        if (mapping == null || mapping.Count == 0) yield break;
-
-        var rowsToProcess = (ObeyFilter && worksheet.AutoFilter.IsEnabled) switch
-        {
-            true => worksheet.AutoFilter.VisibleRows
-                .Where(x => x.RowNumber() > firstRow.RowNumber())
-                .Select(x => x.WorksheetRow()),
-            false => worksheet.RowsUsed().Where(x => x.RowNumber() > firstRow.RowNumber())
-                
-        };
-
-        rowsToProcess = rowsToProcess
-            .Skip((int)skip);
-        
-        foreach (var item in ProcessRows(rowsToProcess, mapping))
-            yield return item;
-    } 
 }
