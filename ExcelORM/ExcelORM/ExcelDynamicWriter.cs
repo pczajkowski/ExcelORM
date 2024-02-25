@@ -33,6 +33,14 @@ public class ExcelDynamicWriter
         Write(values, xlWorksheet, append);
     }
 
+    public void WriteAll(IEnumerable<DynamicWorksheet>? dynamicWorksheets, bool append = false)
+    {
+        if (dynamicWorksheets == null) return;
+
+        foreach (var dynamicWorksheet in dynamicWorksheets)
+            Write(dynamicWorksheet.Cells, dynamicWorksheet.Name, append);
+    }
+
     private static void Write(IEnumerable<List<DynamicCell>> values, IXLWorksheet worksheet, bool append)
     {
         var rowIndex = append switch
