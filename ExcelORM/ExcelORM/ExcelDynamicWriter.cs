@@ -20,6 +20,27 @@ public class ExcelDynamicWriter
         return ++rowIndex;
     }
 
+    private static void Write(IEnumerable<List<DynamicCell>> values, IXLWorksheet worksheet, bool append)
+    {
+        var rowIndex = append switch
+        {
+            true => worksheet.LastRowUsed().RowNumber() + 1,
+            false => GenerateHeader(worksheet, values.First()),
+        };
+
+        foreach (var row in values)
+        {
+            foreach (var cell in row)
+            {
+                if (cell.Value == null) continue;
+
+                worksheet.Cell(rowIndex, cell.Position).Value = XLCellValue.FromObject(cell.Value);
+            }
+
+            rowIndex++;
+        }
+    }
+
     public void Write(IEnumerable<List<DynamicCell>>? values, string? worksheetName = null, bool append = false)
     {
         if (values == null) return;
@@ -39,27 +60,6 @@ public class ExcelDynamicWriter
 
         foreach (var dynamicWorksheet in dynamicWorksheets)
             Write(dynamicWorksheet.Cells, dynamicWorksheet.Name, append);
-    }
-
-    private static void Write(IEnumerable<List<DynamicCell>> values, IXLWorksheet worksheet, bool append)
-    {
-        var rowIndex = append switch
-        {
-            true => worksheet.LastRowUsed().RowNumber() + 1,
-            false => GenerateHeader(worksheet, values.First()),
-        };
-
-        foreach (var row in values)
-        {
-            foreach (var cell in row)
-            {
-                if (cell.Value == null) continue;
-                
-                worksheet.Cell(rowIndex, cell.Position).Value = XLCellValue.FromObject(cell.Value);
-            }
-
-            rowIndex++;
-        }
     }
 
     public void SaveAs(string path, IExcelConverter? converter = null)

@@ -26,17 +26,6 @@ public class ExcelWriter
         return ++rowIndex;
     }
 
-    public void Write<T>(IEnumerable<T> values, string? worksheetName = null, bool append = false) where T : class, new()
-    {
-        var xlWorksheet = xlWorkbook.Worksheets.FirstOrDefault(x => x.Name.Equals(worksheetName, StringComparison.InvariantCultureIgnoreCase));
-        
-        xlWorksheet ??= !string.IsNullOrWhiteSpace(worksheetName) ?
-            xlWorkbook.AddWorksheet(worksheetName)
-            : xlWorkbook.Worksheets.Count == 0 ? xlWorkbook.AddWorksheet() : xlWorkbook.Worksheets.First();
-
-        Write(values, xlWorksheet, append);
-    }
-
     private static void Write<T>(IEnumerable<T> values, IXLWorksheet worksheet, bool append) where T : class, new()
     {
         var enumerable = values as T[] ?? values.ToArray();
@@ -56,13 +45,24 @@ public class ExcelWriter
             {
                 var valueToSet = property.GetValue(value);
                 if (valueToSet == null) continue;
-                
+
                 worksheet.Cell(rowIndex, cellIndex).Value = XLCellValue.FromObject(valueToSet);
                 cellIndex++;
             }
 
             rowIndex++;
         }
+    }
+
+    public void Write<T>(IEnumerable<T> values, string? worksheetName = null, bool append = false) where T : class, new()
+    {
+        var xlWorksheet = xlWorkbook.Worksheets.FirstOrDefault(x => x.Name.Equals(worksheetName, StringComparison.InvariantCultureIgnoreCase));
+        
+        xlWorksheet ??= !string.IsNullOrWhiteSpace(worksheetName) ?
+            xlWorkbook.AddWorksheet(worksheetName)
+            : xlWorkbook.Worksheets.Count == 0 ? xlWorkbook.AddWorksheet() : xlWorkbook.Worksheets.First();
+
+        Write(values, xlWorksheet, append);
     }
 
     public void SaveAs(string path, IExcelConverter? converter = null)
