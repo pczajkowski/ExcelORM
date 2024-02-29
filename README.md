@@ -17,4 +17,6 @@ It currently supports properties of types as supported by ClosedXML, so:
 
 And their nullable variants.
 
+In version 2 I've added ability to read data dynamically without a need to create a special type. Useful when you need to read/write some not so organized data.
+
 As always, feel free to use it however you desire. But I provide you with no guarantee whatsoever. Enjoy!
