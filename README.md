@@ -15,6 +15,6 @@ It currently supports properties of types as supported by ClosedXML, so:
 - DateTime
 - TimeSpan
 
-And thanks to my "trick" also their nullable variants.
+And their nullable variants.
 
 As always, feel free to use it however you desire. But I provide you with no guarantee whatsoever. Enjoy!
