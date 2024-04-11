@@ -6,9 +6,9 @@ public class WriterTests
 {
     private readonly Test[] arrayOfThree = 
     {
-        new Test { Name = "Bilbo", Surname = "Baggins", Job = "Eater"},
-        new Test { Name = "John", Surname = "McCain", Job = "Policeman"},
-        new Test { Name = "Bruce", Surname = "Lee", Job = "Fighter"}
+        new() { Name = "Bilbo", Surname = "Baggins", Job = "Eater"},
+        new() { Name = "John", Job = "Policeman"},
+        new() { Name = "Bruce", Surname = "Lee", Job = "Fighter"}
     };
 
     private readonly List<Test> listOfTwo = new()
@@ -29,7 +29,11 @@ public class WriterTests
         writer.SaveAs(testFile);
 
         var reader = new ExcelReader(testFile);
-        Assert.Equal(3, reader.Read<Test>(worksheetName).Count());
+        var readArray = reader.Read<Test>(worksheetName).ToArray();
+        Assert.Equal(3, readArray.Length);
+
+        for (int i = 0; i < readArray.Length; i++)
+            Assert.Equal(arrayOfThree[i], readArray[i]);
 
         writer.Write(listOfTwo, worksheetName, true);
         writer.SaveAs(testFile);

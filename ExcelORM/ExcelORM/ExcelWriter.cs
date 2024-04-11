@@ -39,15 +39,15 @@ public class ExcelWriter
 
         foreach (var value in enumerable)
         {
-            var cellIndex = 1;
+            var cellIndex = 0;
             var properties = typeof(T).GetProperties();
             foreach (var property in properties)
             {
+                cellIndex++;
                 var valueToSet = property.GetValue(value);
                 if (valueToSet == null) continue;
 
                 worksheet.Cell(rowIndex, cellIndex).Value = XLCellValue.FromObject(valueToSet);
-                cellIndex++;
             }
 
             rowIndex++;
