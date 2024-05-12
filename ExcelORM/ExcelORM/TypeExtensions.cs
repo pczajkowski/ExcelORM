@@ -1,5 +1,6 @@
 using System.Reflection;
 using ClosedXML.Excel;
+using ExcelORM.Attributes;
 
 namespace ExcelORM;
 
@@ -50,4 +51,6 @@ public static class TypeExtensions
             property.SetValue(currentObject, valueToSet);
         }
     }
+
+    public static bool Skip(this PropertyInfo property) => property.GetCustomAttributes(typeof(SkipAttribute), false).FirstOrDefault() != null;
 }

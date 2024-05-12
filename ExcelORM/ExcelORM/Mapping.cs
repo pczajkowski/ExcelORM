@@ -16,7 +16,7 @@ namespace ExcelORM
             var properties = typeof(T).GetProperties();
             foreach (var property in properties)
             {
-                if (property.GetCustomAttributes(typeof(SkipAttribute), false).FirstOrDefault() != null) continue;
+                if (property.Skip()) continue;
 
                 int? position;
 
