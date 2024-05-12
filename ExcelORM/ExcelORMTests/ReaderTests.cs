@@ -75,4 +75,14 @@ public class ReaderTests
         var results = reader.Read<TestTypes>().ToArray();
         Assert.NotEmpty(results);
     }
+
+    [Fact]
+    public void ReadDifferentTypesWithSkip()
+    {
+        var reader = new ExcelReader(DifferentTypesFile);
+        var results = reader.Read<TestSkip>().ToArray();
+        Assert.NotEmpty(results);
+        Assert.All(results, (x) => Assert.Null(x.Text));
+        Assert.NotNull(results.FirstOrDefault(x => x.Date != null));
+    }
 }

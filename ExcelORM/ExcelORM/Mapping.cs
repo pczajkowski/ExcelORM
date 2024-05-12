@@ -16,6 +16,8 @@ namespace ExcelORM
             var properties = typeof(T).GetProperties();
             foreach (var property in properties)
             {
+                if (property.GetCustomAttributes(typeof(SkipAttribute), false).FirstOrDefault() != null) continue;
+
                 int? position;
 
                 if (property.GetCustomAttributes(typeof(ColumnAttribute), false).FirstOrDefault() is ColumnAttribute { Names.Length: > 0 } attribute)
@@ -29,7 +31,7 @@ namespace ExcelORM
                 map.Add(new Mapping { PropertyName = property.Name, Position = position });
             }
 
-            return map.Count == properties.Length ? map : null;
+            return map.Count > 0 ? map : null;
         }
     }
 }
