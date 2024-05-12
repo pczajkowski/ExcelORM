@@ -17,12 +17,6 @@ public class WriterTests
         new Test { Name = "Donald", Surname = "Trump", Job = "Bankrupt"},
     };
 
-    private readonly TestSkip[] arrayWithSkip =
-    {
-        new() {Text = "Lorem", Date = DateTime.Now.AddHours(1), Int = 1},
-        new() {Text = "Ipsum", Date = null, Int = 2},
-    };
-
     [Fact]
     public void WriteWithAppend()
     {
@@ -104,6 +98,12 @@ public class WriterTests
         File.Delete(testFile);
     }
 
+    private readonly TestSkip[] arrayWithSkip =
+    {
+        new() {Text = "Lorem", Date = DateTime.Now.AddHours(1), Int = 1},
+        new() {Text = "Ipsum", Date = null, Int = 2},
+    };
+
     [Fact]
     public void WriteWithSkip()
     {
@@ -121,6 +121,7 @@ public class WriterTests
 
         for (int i = 0; i < readArray.Length; i++)
         {
+            Assert.NotEqual(arrayWithSkip[i].Text, readArray[i].Text);
             Assert.Equal(arrayWithSkip[i].Date.ToString(), readArray[i].Date.ToString());
             Assert.Equal(arrayWithSkip[i].Int, readArray[i].Int);
         }
