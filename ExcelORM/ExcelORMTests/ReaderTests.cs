@@ -57,9 +57,9 @@ public class ReaderTests
 
         var resultsBadHeader = reader.Read<Test>("BadHeader").ToArray();
         Assert.NotEmpty(resultsBadHeader);
-        Assert.All(resultsBadHeader, (x) => Assert.Null(x.Name));
-        Assert.All(resultsBadHeader, (x) => Assert.Null(x.Surname));
-        Assert.All(resultsBadHeader, (x) => Assert.NotNull(x.Job));
+        Assert.All(resultsBadHeader, x => Assert.Null(x.Name));
+        Assert.All(resultsBadHeader, x => Assert.Null(x.Surname));
+        Assert.All(resultsBadHeader, x => Assert.NotNull(x.Job));
     }
     
     [Fact]
@@ -85,7 +85,7 @@ public class ReaderTests
         var reader = new ExcelReader(DifferentTypesFile);
         var results = reader.Read<TestSkip>().ToArray();
         Assert.NotEmpty(results);
-        Assert.All(results, (x) => Assert.Null(x.Text));
+        Assert.All(results, x => Assert.Null(x.Text));
         Assert.NotNull(results.FirstOrDefault(x => x.Date != null));
     }
 }
