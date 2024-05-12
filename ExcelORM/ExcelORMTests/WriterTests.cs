@@ -159,5 +159,4 @@ public class WriterTests
 
         File.Delete(testFile);
     }
-
 }
