@@ -28,8 +28,7 @@ public class ExcelWriter
 
     private static void Write<T>(IEnumerable<T> values, IXLWorksheet worksheet, bool append) where T : class, new()
     {
-        var enumerable = values as T[] ?? values.ToArray();
-        if (!enumerable.Any()) return;
+        if (!values.Any()) return;
 
         var rowIndex = append switch
         {
@@ -37,7 +36,7 @@ public class ExcelWriter
             false => GenerateHeader<T>(worksheet),
         };
 
-        foreach (var value in enumerable)
+        foreach (var value in values)
         {
             var cellIndex = 0;
             var properties = typeof(T).GetProperties();
