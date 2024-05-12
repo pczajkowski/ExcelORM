@@ -18,14 +18,13 @@ namespace ExcelORM
             {
                 if (property.Skip()) continue;
 
-                int? position;
-
-                if (property.GetCustomAttributes(typeof(ColumnAttribute), false).FirstOrDefault() is ColumnAttribute { Names.Length: > 0 } attribute)
-                    position = headerCells.FirstOrDefault(x => !x.Value.IsBlank && Array.Exists(attribute.Names,
+                var position = property.GetCustomAttributes(typeof(ColumnAttribute), false).FirstOrDefault() switch
+                {
+                    ColumnAttribute { Names.Length: > 0 } attribute => headerCells.FirstOrDefault(x => !x.Value.IsBlank && Array.Exists(attribute.Names,
                             y => y.Equals(x.Value.ToString(), StringComparison.InvariantCultureIgnoreCase)))?.Address
-                        .ColumnNumber;
-                else
-                    position = headerCells.FirstOrDefault(x => !x.Value.IsBlank && property.Name.Equals(x.Value.ToString(), StringComparison.InvariantCultureIgnoreCase))?.Address.ColumnNumber;
+                        .ColumnNumber,
+                    _ => headerCells.FirstOrDefault(x => !x.Value.IsBlank && property.Name.Equals(x.Value.ToString(), StringComparison.InvariantCultureIgnoreCase))?.Address.ColumnNumber
+                };
 
                 if (position == null) continue;
                 map.Add(new Mapping { PropertyName = property.Name, Position = position });
