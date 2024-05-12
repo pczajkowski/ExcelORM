@@ -87,5 +87,17 @@ public class ReaderTests
         Assert.NotEmpty(results);
         Assert.All(results, x => Assert.Null(x.Text));
         Assert.NotNull(results.FirstOrDefault(x => x.Date != null));
+        Assert.NotNull(results.FirstOrDefault(x => x.Int != null));
+    }
+
+    [Fact]
+    public void ReadDifferentTypesWithSkipMiddle()
+    {
+        var reader = new ExcelReader(DifferentTypesFile);
+        var results = reader.Read<TestSkipMiddle>().ToArray();
+        Assert.NotEmpty(results);
+        Assert.NotNull(results.FirstOrDefault(x => x.Text != null));
+        Assert.All(results, x => Assert.Null(x.Date));
+        Assert.NotNull(results.FirstOrDefault(x => x.Int != null));
     }
 }
