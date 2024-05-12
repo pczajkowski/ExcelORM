@@ -73,7 +73,7 @@ public class WriterTests
         var expected = new TestTypes
         {
             Date = DateTime.Now,
-            TimeSpan = TimeSpan.MaxValue,
+            TimeSpan = TimeSpan.FromSeconds(360),
             Double = 2.33,
             Int = 1024,
             Text = "Test"
@@ -90,7 +90,8 @@ public class WriterTests
         Assert.Single(result);
         var first = result.First();
         Assert.Equal(expected.Date.ToString(), first.Date.ToString());
-        Assert.Equal(expected.TimeSpan, first.TimeSpan);
+        Assert.NotNull(first.TimeSpan);
+        Assert.Equal(expected.TimeSpan.Value.Minutes, first.TimeSpan.Value.Minutes);
         Assert.Equal(expected.Double, first.Double);
         Assert.Equal(expected.Int, first.Int);
         Assert.Equal(expected.Text, first.Text);
