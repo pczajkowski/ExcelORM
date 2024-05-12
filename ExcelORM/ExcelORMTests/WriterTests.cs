@@ -128,4 +128,36 @@ public class WriterTests
 
         File.Delete(testFile);
     }
+
+    private readonly TestSkipMiddle[] arrayWithSkipMiddle =
+    {
+        new() {Text = "Lorem", Date = DateTime.Now.AddHours(1), Int = 1},
+        new() {Text = "Ipsum", Date = DateTime.Now.AddHours(2), Int = 2},
+    };
+
+    [Fact]
+    public void WriteWithSkipMiddle()
+    {
+        var testFile = Path.GetRandomFileName();
+        testFile = Path.ChangeExtension(testFile, "xlsx");
+
+        const string worksheetName = "Test";
+        var writer = new ExcelWriter(testFile);
+        writer.Write(arrayWithSkipMiddle, worksheetName);
+        writer.SaveAs(testFile);
+
+        var reader = new ExcelReader(testFile);
+        var readArray = reader.Read<TestSkipMiddle>(worksheetName).ToArray();
+        Assert.Equal(arrayWithSkipMiddle.Length, readArray.Length);
+
+        for (int i = 0; i < readArray.Length; i++)
+        {
+            Assert.Equal(arrayWithSkipMiddle[i].Text, readArray[i].Text);
+            Assert.NotEqual(arrayWithSkipMiddle[i].Date.ToString(), readArray[i].Date.ToString());
+            Assert.Equal(arrayWithSkipMiddle[i].Int, readArray[i].Int);
+        }
+
+        File.Delete(testFile);
+    }
+
 }
