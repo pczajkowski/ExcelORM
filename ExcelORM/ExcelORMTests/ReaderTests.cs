@@ -56,7 +56,10 @@ public class ReaderTests
         Assert.Equal(results.Length, resultsWithTitle.Length);
 
         var resultsBadHeader = reader.Read<Test>("BadHeader").ToArray();
-        Assert.Empty(resultsBadHeader);
+        Assert.NotEmpty(resultsBadHeader);
+        Assert.All(resultsBadHeader, (x) => Assert.Null(x.Name));
+        Assert.All(resultsBadHeader, (x) => Assert.Null(x.Surname));
+        Assert.All(resultsBadHeader, (x) => Assert.NotNull(x.Job));
     }
     
     [Fact]
