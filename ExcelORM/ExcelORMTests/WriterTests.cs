@@ -17,6 +17,12 @@ public class WriterTests
         new Test { Name = "Donald", Surname = "Trump", Job = "Bankrupt"},
     };
 
+    private readonly TestSkip[] arrayWithSkip =
+    {
+        new() {Text = "Lorem", Date = DateTime.Now.AddHours(1), Int = 1},
+        new() {Text = "Ipsum", Date = null, Int = 2},
+    };
+
     [Fact]
     public void WriteWithAppend()
     {
@@ -54,7 +60,7 @@ public class WriterTests
         writer.SaveAs(testFile);
 
         var reader = new ExcelReader(testFile);
-        Assert.Equal(3, reader.Read<Test>().Count());
+        Assert.Equal(arrayOfThree.Length, reader.Read<Test>().Count());
 
         writer.Write(listOfTwo, append: true);
         writer.SaveAs(testFile);
@@ -94,6 +100,30 @@ public class WriterTests
         Assert.Equal(expected.Double, first.Double);
         Assert.Equal(expected.Int, first.Int);
         Assert.Equal(expected.Text, first.Text);
+
+        File.Delete(testFile);
+    }
+
+    [Fact]
+    public void WriteWithSkip()
+    {
+        var testFile = Path.GetRandomFileName();
+        testFile = Path.ChangeExtension(testFile, "xlsx");
+
+        const string worksheetName = "Test";
+        var writer = new ExcelWriter(testFile);
+        writer.Write(arrayWithSkip, worksheetName);
+        writer.SaveAs(testFile);
+
+        var reader = new ExcelReader(testFile);
+        var readArray = reader.Read<TestSkip>(worksheetName).ToArray();
+        Assert.Equal(arrayWithSkip.Length, readArray.Length);
+
+        for (int i = 0; i < readArray.Length; i++)
+        {
+            Assert.Equal(arrayWithSkip[i].Date.ToString(), readArray[i].Date.ToString());
+            Assert.Equal(arrayWithSkip[i].Int, readArray[i].Int);
+        }
 
         File.Delete(testFile);
     }

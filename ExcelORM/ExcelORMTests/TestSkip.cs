@@ -7,5 +7,6 @@ namespace ExcelORMTests
         [Skip]
         public string? Text { get; set; }
         public DateTime? Date { get; set; }
+        public double? Int { get; set; }
     }
 }

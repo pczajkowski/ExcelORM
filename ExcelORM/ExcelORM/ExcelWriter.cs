@@ -18,6 +18,8 @@ public class ExcelWriter
         var properties = typeof(T).GetProperties();
         foreach (var property in properties)
         {
+            if (property.GetCustomAttributes(typeof(SkipAttribute), false).FirstOrDefault() != null) continue;
+
             var columnAttribute = property.GetCustomAttributes(typeof(ColumnAttribute), false).FirstOrDefault() as ColumnAttribute;
             worksheet.Cell(rowIndex, cellIndex).Value = columnAttribute is { Names.Length: > 0 } ? columnAttribute.Names.First() : property.Name;
             cellIndex++;
@@ -42,6 +44,8 @@ public class ExcelWriter
             var properties = typeof(T).GetProperties();
             foreach (var property in properties)
             {
+                if (property.GetCustomAttributes(typeof(SkipAttribute), false).FirstOrDefault() != null) continue;
+
                 cellIndex++;
                 var valueToSet = property.GetValue(value);
                 if (valueToSet == null) continue;
