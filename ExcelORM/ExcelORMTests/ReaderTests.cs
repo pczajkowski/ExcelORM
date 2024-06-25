@@ -10,6 +10,7 @@ public class ReaderTests
     private const string DifficultFile = "testFiles/columnsOnTheLeftHeaderNotFirstRow.xlsx";
     private const string MultipleSheetsFile = "testFiles/multipleSheets.xlsx";
     private const string DifferentTypesFile = "testFiles/differentTypes.xlsx";
+    private const string WithFormulaFile = "testFiles/withFormula.xlsx";
     
     [Fact]
     public void Read()
@@ -99,5 +100,13 @@ public class ReaderTests
         Assert.NotNull(results.FirstOrDefault(x => x.Text != null));
         Assert.All(results, x => Assert.Null(x.Date));
         Assert.NotNull(results.FirstOrDefault(x => x.Int != null));
+    }
+
+    [Fact]
+    public void ReadWithFormula()
+    {
+        var reader = new ExcelReader(WithFormulaFile);
+        var results = reader.Read<TestWithFormula>().ToArray();
+        Assert.NotEmpty(results);
     }
 }

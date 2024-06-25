@@ -32,7 +32,23 @@ public class ExcelReader
                 var property = type.GetProperty(item.PropertyName);
                 if (property == null) continue;
 
-                current.SetPropertyValue(property, cell.Value);
+                switch (property.PropertyType)
+                {
+                    case Type formulaType when formulaType == typeof(Formula):
+                        var formula = new Formula
+                        {
+                            FormulaA1 = cell.FormulaA1
+                        };
+
+                        var valueProperty = formulaType.GetProperty(nameof(formula.Value));
+                        if (valueProperty == null) continue;
+                        formula.SetPropertyValue(valueProperty, cell.Value);
+                        property.SetValue(current, formula);
+                        break;
+                    default:
+                        current.SetPropertyValue(property, cell.Value);
+                        break;
+                }
             }
 
             yield return current;
