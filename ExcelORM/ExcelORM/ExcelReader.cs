@@ -37,12 +37,10 @@ public class ExcelReader
                     case Type formulaType when formulaType == typeof(Formula):
                         var formula = new Formula
                         {
-                            FormulaA1 = cell.FormulaA1
+                            FormulaA1 = cell.FormulaA1,
+                            Value = cell.Value.ToObject(),
                         };
 
-                        var valueProperty = formulaType.GetProperty(nameof(formula.Value));
-                        if (valueProperty == null) continue;
-                        formula.SetPropertyValue(valueProperty, cell.Value);
                         property.SetValue(current, formula);
                         break;
                     default:
