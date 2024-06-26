@@ -12,7 +12,7 @@ public class ExcelWriter
         xlWorkbook = File.Exists(path) ? new XLWorkbook(path) : new XLWorkbook();
     }
 
-    private static int GenerateHeader<T>(IXLWorksheet worksheet) where T : class, new()
+    private static int GenerateHeader<T>(IXLWorksheet worksheet) where T : class
     {
         var rowIndex = 1;
         var cellIndex = 1;
@@ -31,7 +31,7 @@ public class ExcelWriter
 
     private static Type formulaType = typeof(Formula);
 
-    private static void Write<T>(IEnumerable<T> values, IXLWorksheet worksheet, bool append) where T : class, new()
+    private static void Write<T>(IEnumerable<T> values, IXLWorksheet worksheet, bool append) where T : class
     {
         if (!values.Any()) return;
 
@@ -73,7 +73,7 @@ public class ExcelWriter
         }
     }
 
-    public void Write<T>(IEnumerable<T> values, string? worksheetName = null, bool append = false) where T : class, new()
+    public void Write<T>(IEnumerable<T> values, string? worksheetName = null, bool append = false) where T : class
     {
         var xlWorksheet = xlWorkbook.Worksheets.FirstOrDefault(x => x.Name.Equals(worksheetName, StringComparison.InvariantCultureIgnoreCase));
         

@@ -8,7 +8,7 @@ namespace ExcelORM
         public string? PropertyName { get; set; }
         public int? Position { get; set; }
 
-        public static List<Mapping>? MapProperties<T>(IXLCells? headerCells) where T : new()
+        public static List<Mapping>? MapProperties<T>(IXLCells? headerCells) where T : class
         {
             if (headerCells == null || !headerCells.Any()) return null;
 

@@ -1,3 +1,4 @@
+using System.Runtime.Serialization;
 using ClosedXML.Excel;
 using ExcelORM.Models;
 
@@ -14,14 +15,16 @@ public class ExcelReader
         xlWorkbook = new XLWorkbook(path);
     }
 
-    private IEnumerable<T> ProcessRows<T>(IEnumerable<IXLRow> rows, List<Mapping> mapping) where T : class, new()
+    private IEnumerable<T> ProcessRows<T>(IEnumerable<IXLRow> rows, List<Mapping> mapping) where T : class
     {
         var type = typeof(T);
         foreach (var row in rows)
         {
             if (SkipHidden && row.IsHidden) continue;
 
-            var current = new T();
+            var current = FormatterServices.GetUninitializedObject(typeof(T)) as T;
+            if (current == null) continue;
+
             foreach (var item in mapping)
             {
                 if (item.Position == null || item.PropertyName == null) continue;
@@ -53,7 +56,7 @@ public class ExcelReader
         }
     }
 
-    private IEnumerable<T> Read<T>(IXLWorksheet? worksheet, uint startFrom, uint skip) where T : class, new()
+    private IEnumerable<T> Read<T>(IXLWorksheet? worksheet, uint startFrom, uint skip) where T : class
     {
         if (worksheet == null) yield break;
 
@@ -80,7 +83,7 @@ public class ExcelReader
             yield return item;
     }
 
-    public IEnumerable<T> Read<T>(string? worksheetName, uint startFrom = 1, uint skip = 0) where T : class, new()
+    public IEnumerable<T> Read<T>(string? worksheetName, uint startFrom = 1, uint skip = 0) where T : class
     {
         var worksheet = xlWorkbook.Worksheets.FirstOrDefault(x => x.Name.Equals(worksheetName, StringComparison.InvariantCultureIgnoreCase));
         if (worksheet == null) yield break;
@@ -89,7 +92,7 @@ public class ExcelReader
             yield return value;
     }
 
-    public IEnumerable<T> Read<T>(int worksheetIndex = 1, uint startFrom = 1, uint skip = 0) where T : class, new()
+    public IEnumerable<T> Read<T>(int worksheetIndex = 1, uint startFrom = 1, uint skip = 0) where T : class
     {
         if (worksheetIndex > xlWorkbook.Worksheets.Count) yield break;
 
@@ -100,7 +103,7 @@ public class ExcelReader
             yield return value;
     }
 
-    public IEnumerable<T> ReadAll<T>(uint startFrom = 1, uint skip = 0) where T : class, new()
+    public IEnumerable<T> ReadAll<T>(uint startFrom = 1, uint skip = 0) where T : class
     {
         foreach (var worksheet in xlWorkbook.Worksheets)
         {
