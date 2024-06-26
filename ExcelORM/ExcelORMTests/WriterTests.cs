@@ -1,4 +1,5 @@
 using ExcelORM;
+using ExcelORM.Models;
 
 namespace ExcelORMTests;
 
@@ -130,7 +131,7 @@ public class WriterTests
         File.Delete(testFile);
     }
 
-    private readonly TestSkipMiddle[] arrayWithSkipMiddle =
+    private static readonly TestSkipMiddle[] arrayWithSkipMiddle =
     {
         new() {Text = "Lorem", Date = DateTime.Now.AddHours(1), Int = 1},
         new() {Text = "Ipsum", Date = DateTime.Now.AddHours(2), Int = 2},
@@ -158,6 +159,36 @@ public class WriterTests
             Assert.Equal(arrayWithSkipMiddle[i].Int, readArray[i].Int);
         }
 
+        File.Delete(testFile);
+    }
+
+    private static readonly TestWithFormula[] arrayWithFormulas =
+    {
+        new() { Name = "Bilbo", Surname = "Baggins", Job = "Eater", FullName = new Formula{ FormulaA1 = "B2&C2" } },
+        new() { Name = "John", Job = "Policeman", FullName = new Formula{ FormulaA1 = "B3&C3" } },
+        new() { Name = "Bruce", Surname = "Lee", Job = "Fighter", FullName = new Formula{ FormulaA1 = "B4&C4" } },
+    };
+
+    [Fact]
+    public void WriteWithFormula()
+    {
+        var testFile = Path.GetRandomFileName();
+        testFile = Path.ChangeExtension(testFile, "xlsx");
+
+        var writer = new ExcelWriter(testFile);
+        writer.Write(arrayWithFormulas);
+        writer.SaveAs(testFile);
+
+        var reader = new ExcelReader(testFile);
+        var readArray = reader.Read<TestWithFormula>().ToArray();
+        Assert.Equal(arrayWithFormulas.Length, readArray.Length);
+
+        foreach (var item in readArray)
+        {
+            Assert.NotNull(item.FullName);
+            Assert.Equal($"{item.Name}{item.Surname}", item.FullName.Value);
+        }
+        
         File.Delete(testFile);
     }
 }

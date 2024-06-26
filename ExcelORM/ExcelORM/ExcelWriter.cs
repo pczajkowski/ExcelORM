@@ -1,5 +1,6 @@
 using ClosedXML.Excel;
 using ExcelORM.Attributes;
+using ExcelORM.Models;
 
 namespace ExcelORM;
 
@@ -28,6 +29,8 @@ public class ExcelWriter
         return ++rowIndex;
     }
 
+    private static Type formulaType = typeof(Formula);
+
     private static void Write<T>(IEnumerable<T> values, IXLWorksheet worksheet, bool append) where T : class, new()
     {
         if (!values.Any()) return;
@@ -47,8 +50,21 @@ public class ExcelWriter
                 if (property.Skip()) continue;
 
                 cellIndex++;
+
                 var valueToSet = property.GetValue(value);
                 if (valueToSet == null) continue;
+
+                if (property.PropertyType == formulaType)
+                {
+                    var formulaA1Property = formulaType.GetProperty(nameof(Formula.FormulaA1));
+                    if (formulaA1Property != null)
+                    {
+                        if (formulaA1Property.GetValue(valueToSet) is string formulaA1)
+                            worksheet.Cell(rowIndex, cellIndex).FormulaA1 = formulaA1;
+                    }
+
+                    continue;
+                }
 
                 worksheet.Cell(rowIndex, cellIndex).Value = XLCellValue.FromObject(valueToSet);
             }
