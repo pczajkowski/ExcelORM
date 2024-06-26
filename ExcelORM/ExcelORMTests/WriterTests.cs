@@ -5,14 +5,14 @@ namespace ExcelORMTests;
 
 public class WriterTests
 {
-    private readonly Test[] arrayOfThree = 
+    private static readonly Test[] arrayOfThree = 
     {
         new() { Name = "Bilbo", Surname = "Baggins", Job = "Eater"},
         new() { Name = "John", Job = "Policeman"},
         new() { Name = "Bruce", Surname = "Lee", Job = "Fighter"}
     };
 
-    private readonly List<Test> listOfTwo = new()
+    private static readonly List<Test> listOfTwo = new()
     {
         new Test { Name = "Elon", Surname = "Musk", Job = "Comedian"},
         new Test { Name = "Donald", Surname = "Trump", Job = "Bankrupt"},
@@ -100,7 +100,7 @@ public class WriterTests
         File.Delete(testFile);
     }
 
-    private readonly TestSkip[] arrayWithSkip =
+    private static readonly TestSkip[] arrayWithSkip =
     {
         new() {Text = "Lorem", Date = DateTime.Now.AddHours(1), Int = 1},
         new() {Text = "Ipsum", Date = null, Int = 2},
