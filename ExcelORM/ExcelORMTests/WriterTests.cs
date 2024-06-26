@@ -14,8 +14,8 @@ public class WriterTests
 
     private static readonly List<Test> listOfTwo = new()
     {
-        new Test { Name = "Elon", Surname = "Musk", Job = "Comedian"},
-        new Test { Name = "Donald", Surname = "Trump", Job = "Bankrupt"},
+        new() { Name = "Elon", Surname = "Musk", Job = "Comedian"},
+        new() { Name = "Donald", Surname = "Trump", Job = "Bankrupt"},
     };
 
     [Fact]
