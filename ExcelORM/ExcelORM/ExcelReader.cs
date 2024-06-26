@@ -1,4 +1,4 @@
-using System.Runtime.Serialization;
+using System.Runtime.CompilerServices;
 using ClosedXML.Excel;
 using ExcelORM.Models;
 
@@ -21,9 +21,7 @@ public class ExcelReader
         foreach (var row in rows)
         {
             if (SkipHidden && row.IsHidden) continue;
-
-            var current = FormatterServices.GetUninitializedObject(typeof(T)) as T;
-            if (current == null) continue;
+            if (RuntimeHelpers.GetUninitializedObject(typeof(T)) is not T current) continue;
 
             foreach (var item in mapping)
             {
