@@ -191,4 +191,33 @@ public class WriterTests
         
         File.Delete(testFile);
     }
+
+    private static readonly TestNumbersWithFormula[] arrayNumbersWithFormulas =
+    {
+        new(){ First = 1, Second = 2, Sum = new Formula{FormulaA1 = "SUM(A2:B2)"} },
+        new(){ First = 2, Second = 3, Sum = new Formula{FormulaA1 = "SUM(A3:B3)"} },
+    };
+
+    [Fact]
+    public void NumbersWithFormula()
+    {
+        var testFile = Path.GetRandomFileName();
+        testFile = Path.ChangeExtension(testFile, "xlsx");
+
+        var writer = new ExcelWriter(testFile);
+        writer.Write(arrayNumbersWithFormulas);
+        writer.SaveAs(testFile);
+
+        var reader = new ExcelReader(testFile);
+        var readArray = reader.Read<TestNumbersWithFormula>().ToArray();
+        Assert.Equal(arrayNumbersWithFormulas.Length, readArray.Length);
+
+        foreach (var item in readArray)
+        {
+            Assert.NotNull(item.Sum);
+            Assert.Equal(item.First + item.Second, item.Sum.Value);
+        }
+
+        File.Delete(testFile);
+    }
 }
