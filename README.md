@@ -19,4 +19,7 @@ And their nullable variants.
 
 In version 2 I've added ability to read data dynamically without a need to create a special type. Useful when you need to read/write some not so organized data.
 
+In version 2.2 I've added support for formulas, but as this library is based on ClosedXML it has its limitations, as per [Evaluating Formulas](https://github.com/closedxml/closedxml/wiki/Evaluating-Formulas):
+*Not all formulas are included and you'll probably get a nasty error if the formula isn't supported or if there's an error in the formula. Please test your formulas before going to production.*
+
 As always, feel free to use it however you desire. But I provide you with no guarantee whatsoever. Enjoy!
