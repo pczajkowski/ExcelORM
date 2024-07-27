@@ -30,8 +30,6 @@ public class ExcelWriter
         return ++rowIndex;
     }
 
-    private static Type formulaType = typeof(Formula);
-
     private static void Write<T>(IEnumerable<T> values, IXLWorksheet worksheet, bool append) where T : class
     {
         if (!values.Any()) return;
@@ -54,16 +52,10 @@ public class ExcelWriter
 
                 var valueToSet = property.GetValue(value);
                 if (valueToSet == null) continue;
-
-                if (property.PropertyType == formulaType)
+                
+                if (valueToSet is ISpecialProperty specialProperty)
                 {
-                    var formulaA1Property = formulaType.GetProperty(nameof(Formula.FormulaA1));
-                    if (formulaA1Property != null)
-                    {
-                        if (formulaA1Property.GetValue(valueToSet) is string formulaA1)
-                            worksheet.Cell(rowIndex, cellIndex).FormulaA1 = formulaA1;
-                    }
-
+                    specialProperty.SetCellValue(worksheet.Cell(rowIndex, cellIndex));
                     continue;
                 }
 
