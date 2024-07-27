@@ -53,7 +53,7 @@ public class ExcelWriter
                 var valueToSet = property.GetValue(value);
                 if (valueToSet == null) continue;
                 
-                if (valueToSet is ISpecialProperty specialProperty)
+                if (valueToSet is SpecialBase specialProperty)
                 {
                     specialProperty.SetCellValue(worksheet.Cell(rowIndex, cellIndex));
                     continue;

@@ -1,5 +1,6 @@
 using System.Runtime.CompilerServices;
 using ClosedXML.Excel;
+using ExcelORM.Interfaces;
 using ExcelORM.Models;
 
 namespace ExcelORM;
@@ -33,16 +34,13 @@ public class ExcelReader
                 var property = type.GetProperty(item.PropertyName);
                 if (property == null) continue;
 
-                switch (property.PropertyType)
+                switch (property.PropertyType.BaseType)
                 {
-                    case Type formulaType when formulaType == typeof(Formula):
-                        var formula = new Formula
-                        {
-                            FormulaA1 = cell.FormulaA1,
-                            Value = cell.Value.ToObject(),
-                        };
+                    case Type specialProperty when specialProperty == typeof(SpecialBase):
+                        if (RuntimeHelpers.GetUninitializedObject(property.PropertyType) is not SpecialBase special) break;
+                        special.GetValueFromCell(cell);
 
-                        property.SetValue(current, formula);
+                        property.SetValue(current, special);
                         break;
                     default:
                         current.SetPropertyValue(property, cell.Value);
