@@ -1,4 +1,4 @@
-namespace ExcelORM;
+namespace ExcelORM.Interfaces;
 
 /// <summary>
 /// A tool with which I'm working is using Aspose.Cells. I don't know if it's Aspose or this tool usage of it,

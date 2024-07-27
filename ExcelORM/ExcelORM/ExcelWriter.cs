@@ -1,5 +1,6 @@
 using ClosedXML.Excel;
 using ExcelORM.Attributes;
+using ExcelORM.Interfaces;
 using ExcelORM.Models;
 
 namespace ExcelORM;
