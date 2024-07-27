@@ -34,18 +34,16 @@ public class ExcelReader
                 var property = type.GetProperty(item.PropertyName);
                 if (property == null) continue;
 
-                switch (property.PropertyType.BaseType)
+                if (property.PropertyType.BaseType != null && property.PropertyType.BaseType == typeof(SpecialBase))
                 {
-                    case Type specialProperty when specialProperty == typeof(SpecialBase):
-                        if (RuntimeHelpers.GetUninitializedObject(property.PropertyType) is not SpecialBase special) break;
-                        special.GetValueFromCell(cell);
+                    if (RuntimeHelpers.GetUninitializedObject(property.PropertyType) is not SpecialBase special) continue;
+                    special.GetValueFromCell(cell);
 
-                        property.SetValue(current, special);
-                        break;
-                    default:
-                        current.SetPropertyValue(property, cell.Value);
-                        break;
+                    property.SetValue(current, special);
+                    continue;
                 }
+
+                current.SetPropertyValue(property, cell.Value);
             }
 
             yield return current;
