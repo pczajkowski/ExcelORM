@@ -75,7 +75,7 @@ public class ExcelWriter
     {
         if (!values.Any()) return;
 
-        var rowIndex = 1;
+        int rowIndex;
         var properties = typeof(T).GetProperties();
         List<Mapping>? mapping = [];
 
