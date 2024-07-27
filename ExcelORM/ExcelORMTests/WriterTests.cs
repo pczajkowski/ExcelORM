@@ -82,6 +82,9 @@ public class WriterTests
         var readArray = reader.Read<Test>().ToArray();
         Assert.Equal(6, readArray.Length);
 
+        for (int i = 0; i < arrayOfThree.Length; i++)
+            Assert.Equal(arrayOfThree[i], readArray[i+3]);
+
         File.Delete(testFile);
     }
 
