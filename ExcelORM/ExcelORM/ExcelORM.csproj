@@ -4,7 +4,7 @@
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <Version>2.2.0</Version>
+        <Version>2.3.0</Version>
         <PackageProjectUrl>https://git.liox.eu/pczajkowski/ExcelORM</PackageProjectUrl>
         <RepositoryUrl>https://github.com/pczajkowski/ExcelORM</RepositoryUrl>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
@@ -14,7 +14,7 @@
 	<Authors>Piotr Czajkowski</Authors>
 	<Description>Simple library to read/write C# objects from/to Excel files. </Description>
 	<RepositoryType>GitHub</RepositoryType>
-	<PackageReleaseNotes>Using .NET 8 now. Added support for formulas. Got rid of new constraint.</PackageReleaseNotes>
+	<PackageReleaseNotes>Added Hyperlink and improved appending.</PackageReleaseNotes>
     </PropertyGroup>
 
     <ItemGroup>

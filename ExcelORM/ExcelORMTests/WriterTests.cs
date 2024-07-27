@@ -1,5 +1,6 @@
 using ExcelORM;
 using ExcelORM.Models;
+using ClosedXML.Excel;
 
 namespace ExcelORMTests;
 
@@ -241,6 +242,38 @@ public class WriterTests
             Assert.Equal(item.First + item.Second, item.Sum.Value);
         }
 
+        File.Delete(testFile);
+    }
+
+    private static readonly TestWithHyperlink[] arrayWithHyperlinks =
+    {
+        new() { Name = "Bilbo", Surname = "Baggins", Job = "Eater", Link = new Hyperlink{ Value = "Wiki", Link = new XLHyperlink("https://en.wikipedia.org/wiki/Bilbo_Baggins") } },
+        new() { Name = "John", Job = "Policeman", Link = new Hyperlink{ Value = "CNN", Link = new XLHyperlink("https://edition.cnn.com/2023/12/10/us/john-okeefe-boston-police-death-cec/index.html") } },
+        new() { Name = "Bruce", Surname = "Lee", Job = "Fighter", Link = new Hyperlink{ Value = "IMDb", Link = new XLHyperlink("https://www.imdb.com/name/nm0000045/") } }
+    };
+
+    [Fact]
+    public void WriteWithHyperlink()
+    {
+        var testFile = Path.GetRandomFileName();
+        testFile = Path.ChangeExtension(testFile, "xlsx");
+
+        var writer = new ExcelWriter(testFile);
+        writer.Write(arrayWithHyperlinks);
+        writer.SaveAs(testFile);
+
+        var reader = new ExcelReader(testFile);
+        var readArray = reader.Read<TestWithHyperlink>().ToArray();
+        Assert.Equal(arrayWithFormulas.Length, readArray.Length);
+
+        for (var i = 0; i < readArray.Length; i++)
+        {
+            Assert.NotNull(arrayWithHyperlinks[i].Link);
+            Assert.NotNull(readArray[i].Link);
+            Assert.Equal(arrayWithHyperlinks[i].Link?.Value, readArray[i].Link?.Value);
+            Assert.Equal(arrayWithHyperlinks[i].Link?.Link?.ToString(), readArray[i].Link?.Link?.ToString());
+        }
+        
         File.Delete(testFile);
     }
 }
