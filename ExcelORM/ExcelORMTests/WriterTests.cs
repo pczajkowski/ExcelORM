@@ -64,7 +64,27 @@ public class WriterTests
         Assert.Equal(5, reader.Read<Test>().Count());
         File.Delete(testFile);
     }
-    
+
+    private const string ForAppend = "testFiles/forAppend.xlsx";
+
+    [Fact]
+    public void WriteWithAppendExisting()
+    {
+        var testFile = Path.GetRandomFileName();
+        testFile = Path.ChangeExtension(testFile, "xlsx");
+        File.Copy(ForAppend, testFile);
+
+        var writer = new ExcelWriter(testFile);
+        writer.Write(arrayOfThree, append: true);
+        writer.SaveAs(testFile);
+
+        var reader = new ExcelReader(testFile);
+        var readArray = reader.Read<Test>().ToArray();
+        Assert.Equal(6, readArray.Length);
+
+        File.Delete(testFile);
+    }
+
     [Fact]
     public void WriteDifferentTypes()
     {

@@ -30,6 +30,9 @@
       <None Update="testFiles\dynamicDifficult.xlsx">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
+      <None Update="testFiles\forAppend.xlsx">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
       <None Update="testFiles\hidden.xlsx">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>

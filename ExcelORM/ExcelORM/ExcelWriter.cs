@@ -1,3 +1,4 @@
+using System.Reflection;
 using ClosedXML.Excel;
 using ExcelORM.Attributes;
 using ExcelORM.Interfaces;
@@ -30,38 +31,67 @@ public class ExcelWriter
         return ++rowIndex;
     }
 
+    private static void WriteCell<T>(T value, PropertyInfo property, IXLCell cell)
+    {
+        var valueToSet = property.GetValue(value);
+        if (valueToSet == null) return;
+
+        if (valueToSet is SpecialBase specialProperty)
+        {
+            specialProperty.SetCellValue(cell);
+            return;
+        }
+
+        cell.Value = XLCellValue.FromObject(valueToSet);
+    }
+
+    private static void WriteRowAppend<T>(T value, IXLWorksheet worksheet, PropertyInfo[] properties, int rowIndex, List<Mapping> mapping)
+    {
+        foreach (var property in properties)
+        {
+            if (property.Skip()) continue;
+
+            var mapped = mapping.FirstOrDefault(x => x.PropertyName != null && x.PropertyName.Equals(property.Name));
+            if (mapped == null || mapped.Position == null) continue;
+
+            WriteCell(value, property, worksheet.Cell(rowIndex, mapped.Position.Value));
+        }
+    }
+
+    private static void WriteRow<T>(T value, IXLWorksheet worksheet, PropertyInfo[] properties, int rowIndex)
+    {
+        var cellIndex = 0;
+        foreach (var property in properties)
+        {
+            if (property.Skip()) continue;
+
+            cellIndex++;
+
+            WriteCell(value, property, worksheet.Cell(rowIndex, cellIndex));
+        }
+    }
+
     private static void Write<T>(IEnumerable<T> values, IXLWorksheet worksheet, bool append) where T : class
     {
         if (!values.Any()) return;
 
-        var rowIndex = append switch
+        var rowIndex = 1;
+        var properties = typeof(T).GetProperties();
+        List<Mapping>? mapping = [];
+
+        if (append)
         {
-            true => worksheet.LastRowUsed().RowNumber() + 1,
-            false => GenerateHeader<T>(worksheet),
-        };
+            rowIndex = worksheet.LastRowUsed().RowNumber() + 1;
+            mapping = Mapping.MapProperties<T>(worksheet.FirstRowUsed().CellsUsed());
+            if (mapping == null || mapping.Count == 0) return;
+        } else
+            rowIndex = GenerateHeader<T>(worksheet);
 
         foreach (var value in values)
         {
-            var cellIndex = 0;
-            var properties = typeof(T).GetProperties();
-            foreach (var property in properties)
-            {
-                if (property.Skip()) continue;
-
-                cellIndex++;
-
-                var valueToSet = property.GetValue(value);
-                if (valueToSet == null) continue;
-                
-                if (valueToSet is SpecialBase specialProperty)
-                {
-                    specialProperty.SetCellValue(worksheet.Cell(rowIndex, cellIndex));
-                    continue;
-                }
-
-                worksheet.Cell(rowIndex, cellIndex).Value = XLCellValue.FromObject(valueToSet);
-            }
-
+            if (append) WriteRowAppend(value, worksheet, properties, rowIndex, mapping);
+            else WriteRow(value, worksheet, properties, rowIndex);
+            
             rowIndex++;
         }
     }
