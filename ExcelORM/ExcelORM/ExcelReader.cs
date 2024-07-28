@@ -34,9 +34,9 @@ public class ExcelReader
                 var property = type.GetProperty(item.PropertyName);
                 if (property == null) continue;
 
-                if (property.PropertyType.BaseType != null && property.PropertyType.BaseType == typeof(SpecialBase))
+                if (property.PropertyType.BaseType == typeof(SpecialBase) &&
+                    RuntimeHelpers.GetUninitializedObject(property.PropertyType) is SpecialBase special)
                 {
-                    if (RuntimeHelpers.GetUninitializedObject(property.PropertyType) is not SpecialBase special) continue;
                     special.GetValueFromCell(cell);
 
                     property.SetValue(current, special);
