@@ -14,11 +14,10 @@ public class ExcelWriter
         xlWorkbook = File.Exists(path) ? new XLWorkbook(path) : new XLWorkbook();
     }
 
-    private static int GenerateHeader<T>(IXLWorksheet worksheet) where T : class
+    private static int GenerateHeader<T>(IXLWorksheet worksheet, PropertyInfo[] properties) where T : class
     {
         var rowIndex = 1;
         var cellIndex = 1;
-        var properties = typeof(T).GetProperties();
         foreach (var property in properties)
         {
             if (property.Skip()) continue;
@@ -86,7 +85,7 @@ public class ExcelWriter
             mapping = Mapping.MapProperties<T>(headerCells);
             if (mapping == null || mapping.Count == 0) return;
         } else
-            rowIndex = GenerateHeader<T>(worksheet);
+            rowIndex = GenerateHeader<T>(worksheet, properties);
 
         foreach (var value in values)
         {
