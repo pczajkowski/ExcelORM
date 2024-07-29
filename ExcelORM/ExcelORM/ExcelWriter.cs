@@ -71,7 +71,7 @@ public class ExcelWriter
         }
     }
 
-    private static void Write<T>(IEnumerable<T> values, IXLWorksheet worksheet, bool append) where T : class
+    private static void Write<T>(IEnumerable<T> values, IXLWorksheet worksheet, bool append, uint? headerRowIndex = null) where T : class
     {
         if (!values.Any()) return;
 
@@ -82,7 +82,8 @@ public class ExcelWriter
         if (append)
         {
             rowIndex = worksheet.LastRowUsed().RowNumber() + 1;
-            mapping = Mapping.MapProperties<T>(worksheet.FirstRowUsed().CellsUsed());
+            var headerCells = headerRowIndex != null ? worksheet.Row((int)headerRowIndex).CellsUsed() : worksheet.FirstRowUsed().CellsUsed();
+            mapping = Mapping.MapProperties<T>(headerCells);
             if (mapping == null || mapping.Count == 0) return;
         } else
             rowIndex = GenerateHeader<T>(worksheet);
@@ -96,7 +97,7 @@ public class ExcelWriter
         }
     }
 
-    public void Write<T>(IEnumerable<T> values, string? worksheetName = null, bool append = false) where T : class
+    public void Write<T>(IEnumerable<T> values, string? worksheetName = null, bool append = false, uint? headerRowIndex = null) where T : class
     {
         var xlWorksheet = xlWorkbook.Worksheets.FirstOrDefault(x => x.Name.Equals(worksheetName, StringComparison.InvariantCultureIgnoreCase));
         
@@ -104,7 +105,7 @@ public class ExcelWriter
             xlWorkbook.AddWorksheet(worksheetName)
             : xlWorkbook.Worksheets.Count == 0 ? xlWorkbook.AddWorksheet() : xlWorkbook.Worksheets.First();
 
-        Write(values, xlWorksheet, append);
+        Write(values, xlWorksheet, append, headerRowIndex);
     }
 
     public void SaveAs(string path, IExcelConverter? converter = null)

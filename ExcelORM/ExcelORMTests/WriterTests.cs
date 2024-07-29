@@ -75,12 +75,13 @@ public class WriterTests
         testFile = Path.ChangeExtension(testFile, "xlsx");
         File.Copy(ForAppend, testFile);
 
+        uint headerRowIndex = 3;
         var writer = new ExcelWriter(testFile);
-        writer.Write(arrayOfThree, append: true);
+        writer.Write(arrayOfThree, append: true, headerRowIndex: headerRowIndex);
         writer.SaveAs(testFile);
 
         var reader = new ExcelReader(testFile);
-        var readArray = reader.Read<Test>().ToArray();
+        var readArray = reader.Read<Test>(startFrom: headerRowIndex).ToArray();
         Assert.Equal(6, readArray.Length);
 
         for (int i = 0; i < arrayOfThree.Length; i++)
