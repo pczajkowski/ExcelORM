@@ -90,6 +90,29 @@ public class WriterTests
         File.Delete(testFile);
     }
 
+    private const string ForAppendHeaderFirst = "testFiles/forAppendHeaderFirst.xlsx";
+
+    [Fact]
+    public void WriteWithAppendExistingHeaderFirst()
+    {
+        var testFile = Path.GetRandomFileName();
+        testFile = Path.ChangeExtension(testFile, "xlsx");
+        File.Copy(ForAppendHeaderFirst, testFile);
+
+        var writer = new ExcelWriter(testFile);
+        writer.Write(arrayOfThree, append: true);
+        writer.SaveAs(testFile);
+
+        var reader = new ExcelReader(testFile);
+        var readArray = reader.Read<Test>().ToArray();
+        Assert.Equal(6, readArray.Length);
+
+        for (int i = 0; i < arrayOfThree.Length; i++)
+            Assert.Equal(arrayOfThree[i], readArray[i + 3]);
+
+        File.Delete(testFile);
+    }
+
     [Fact]
     public void WriteDifferentTypes()
     {
