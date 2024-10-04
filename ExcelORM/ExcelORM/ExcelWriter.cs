@@ -79,23 +79,25 @@ public class ExcelWriter
     {
         if (!values.Any()) return;
 
-        int rowIndex;
+        int? rowIndex;
         var properties = typeof(T).GetProperties();
         List<Mapping>? mapping = [];
 
         if (append)
         {
-            rowIndex = worksheet.LastRowUsed().RowNumber() + 1;
-            var headerCells = headerRowIndex != null ? worksheet.Row((int)headerRowIndex).CellsUsed() : worksheet.FirstRowUsed().CellsUsed();
+            rowIndex = worksheet.LastRowUsed()?.RowNumber() + 1;
+            var headerCells = headerRowIndex != null ? worksheet.Row((int)headerRowIndex).CellsUsed() : worksheet.FirstRowUsed()?.CellsUsed();
             mapping = Mapping.MapProperties<T>(headerCells);
             if (mapping == null || mapping.Count == 0) return;
         } else
             rowIndex = GenerateHeader<T>(worksheet, properties);
 
+        if (rowIndex == null) throw new NullReferenceException(nameof(rowIndex));
+
         foreach (var value in values)
         {
-            if (append) WriteRowAppend(value, worksheet, properties, rowIndex, mapping);
-            else WriteRow(value, worksheet, properties, rowIndex);
+            if (append) WriteRowAppend(value, worksheet, properties, rowIndex.Value, mapping);
+            else WriteRow(value, worksheet, properties, rowIndex.Value);
             
             rowIndex++;
         }

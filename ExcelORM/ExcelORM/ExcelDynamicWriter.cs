@@ -30,9 +30,11 @@ public class ExcelDynamicWriter
     {
         var rowIndex = append switch
         {
-            true => worksheet.LastRowUsed().RowNumber() + 1,
+            true => worksheet.LastRowUsed()?.RowNumber() + 1,
             false => GenerateHeader(worksheet, values.First()),
         };
+
+        if (rowIndex == null) throw new NullReferenceException(nameof(rowIndex));
 
         foreach (var row in values)
         {
@@ -40,7 +42,7 @@ public class ExcelDynamicWriter
             {
                 if (cell.Value == null) continue;
 
-                worksheet.Cell(rowIndex, cell.Position).Value = XLCellValue.FromObject(cell.Value);
+                worksheet.Cell(rowIndex.Value, cell.Position).Value = XLCellValue.FromObject(cell.Value);
             }
 
             rowIndex++;
