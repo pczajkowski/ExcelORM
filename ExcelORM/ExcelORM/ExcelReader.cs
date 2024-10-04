@@ -11,6 +11,11 @@ public class ExcelReader
     public bool SkipHidden { get; set; }
     public bool ObeyFilter { get; set; }
 
+    public ExcelReader(IXLWorkbook workbook)
+    {
+        xlWorkbook = workbook ?? throw new ArgumentNullException(nameof(workbook));
+    }
+
     public ExcelReader(string? path)
     {
         xlWorkbook = new XLWorkbook(path);
