@@ -12,6 +12,11 @@ public class ExcelDynamicWriter
         xlWorkbook = File.Exists(path) ? new XLWorkbook(path) : new XLWorkbook();
     }
 
+    public ExcelDynamicWriter(IXLWorkbook workbook)
+    {
+        xlWorkbook = workbook ?? throw new ArgumentNullException(nameof(workbook));
+    }
+
     private static int GenerateHeader(IXLWorksheet worksheet, IEnumerable<DynamicCell> firstRow)
     {
         var rowIndex = 1;

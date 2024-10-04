@@ -14,6 +14,11 @@ public class ExcelDynamicReader
         xlWorkbook = new XLWorkbook(path);
     }
 
+    public ExcelDynamicReader(IXLWorkbook workbook)
+    {
+        xlWorkbook = workbook ?? throw new ArgumentNullException(nameof(workbook));
+    }
+
     private IEnumerable<List<DynamicCell>> ProcessRows(IEnumerable<IXLRow> rows, List<DynamicCell> mapping)
     {
         foreach (var row in rows)
