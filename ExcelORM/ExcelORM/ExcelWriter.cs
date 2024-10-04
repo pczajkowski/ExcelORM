@@ -14,6 +14,11 @@ public class ExcelWriter
         xlWorkbook = File.Exists(path) ? new XLWorkbook(path) : new XLWorkbook();
     }
 
+    public ExcelWriter(IXLWorkbook workbook)
+    {
+        xlWorkbook = workbook ?? throw new ArgumentNullException(nameof(workbook));
+    }
+
     private static int GenerateHeader<T>(IXLWorksheet worksheet, PropertyInfo[] properties) where T : class
     {
         var rowIndex = 1;
