@@ -300,4 +300,20 @@ public class WriterTests
         
         File.Delete(testFile);
     }
+
+    [Fact]
+    public void WriteReadInMemory()
+    {
+        using var workbook = new XLWorkbook();
+        const string worksheetName = "Test";
+        var writer = new ExcelWriter(workbook);
+        writer.Write(arrayOfThree, worksheetName);
+
+        var reader = new ExcelReader(workbook);
+        var readArray = reader.Read<Test>(worksheetName).ToArray();
+        Assert.Equal(3, readArray.Length);
+
+        for (int i = 0; i < readArray.Length; i++)
+            Assert.Equal(arrayOfThree[i], readArray[i]);
+    }
 }
