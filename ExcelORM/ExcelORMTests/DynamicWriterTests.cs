@@ -1,3 +1,4 @@
+using ClosedXML.Excel;
 using ExcelORM;
 
 namespace ExcelORMTests;
@@ -53,5 +54,24 @@ public class DynamicWriterTests
         Assert.Equal(results.Last().Cells?.Count(), savedResults.Last().Cells?.Count());
 
         File.Delete(testFile);
+    }
+
+    [Fact]
+    public void WriteReadInMemory()
+    {
+        using var readWorkbook = new XLWorkbook(DifficultFile);
+        var reader = new ExcelDynamicReader(readWorkbook);
+        var results = reader.Read().ToArray();
+        Assert.NotEmpty(results);
+
+        using var writeWorkbook = new XLWorkbook();
+        var writer = new ExcelDynamicWriter(writeWorkbook);
+        writer.Write(results);
+
+        var savedReader = new ExcelDynamicReader(writeWorkbook);
+        var savedResults = savedReader.Read().ToArray();
+        Assert.NotEmpty(savedResults);
+        Assert.True(results.First().SequenceEqual(savedResults.First()));
+        Assert.True(results.Last().SequenceEqual(savedResults.Last()));
     }
 }
