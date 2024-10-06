@@ -14,7 +14,7 @@ public class DynamicWriterTests
         var testFile = Path.GetRandomFileName();
         testFile = Path.ChangeExtension(testFile, "xlsx");
 
-        var reader = new ExcelDynamicReader(DifficultFile);
+        using var reader = new ExcelDynamicReader(DifficultFile);
         var results = reader.Read().ToArray();
         Assert.NotEmpty(results);
 
@@ -22,7 +22,7 @@ public class DynamicWriterTests
         writer.Write(results);
         writer.SaveAs(testFile);
 
-        var savedReader = new ExcelDynamicReader(testFile);
+        using var savedReader = new ExcelDynamicReader(testFile);
         var savedResults = savedReader.Read().ToArray();
         Assert.NotEmpty(savedResults);
         Assert.True(results.First().SequenceEqual(savedResults.First()));
@@ -37,7 +37,7 @@ public class DynamicWriterTests
         var testFile = Path.GetRandomFileName();
         testFile = Path.ChangeExtension(testFile, "xlsx");
 
-        var reader = new ExcelDynamicReader(MultipleSheetsFile);
+        using var reader = new ExcelDynamicReader(MultipleSheetsFile);
         var results = reader.ReadAll().ToArray();
         Assert.NotEmpty(results);
         
@@ -45,7 +45,7 @@ public class DynamicWriterTests
         writer.WriteAll(results);
         writer.SaveAs(testFile);
 
-        var savedReader = new ExcelDynamicReader(testFile);
+        using var savedReader = new ExcelDynamicReader(testFile);
         var savedResults = savedReader.ReadAll().ToArray();
         Assert.NotEmpty(savedResults);
         Assert.Equal(results.First().Name, savedResults.First().Name);
@@ -60,7 +60,7 @@ public class DynamicWriterTests
     public void WriteReadInMemory()
     {
         using var readWorkbook = new XLWorkbook(DifficultFile);
-        var reader = new ExcelDynamicReader(readWorkbook);
+        using var reader = new ExcelDynamicReader(readWorkbook);
         var results = reader.Read().ToArray();
         Assert.NotEmpty(results);
 
@@ -68,7 +68,7 @@ public class DynamicWriterTests
         var writer = new ExcelDynamicWriter(writeWorkbook);
         writer.Write(results);
 
-        var savedReader = new ExcelDynamicReader(writeWorkbook);
+        using var savedReader = new ExcelDynamicReader(writeWorkbook);
         var savedResults = savedReader.Read().ToArray();
         Assert.NotEmpty(savedResults);
         Assert.True(results.First().SequenceEqual(savedResults.First()));

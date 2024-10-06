@@ -3,7 +3,7 @@ using ExcelORM.Models;
 
 namespace ExcelORM;
 
-public class ExcelDynamicReader
+public class ExcelDynamicReader : IDisposable
 {
     private readonly IXLWorkbook xlWorkbook;
     public bool SkipHidden { get; set; }
@@ -108,4 +108,19 @@ public class ExcelDynamicReader
             };
         }
     }
+
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            xlWorkbook?.Dispose();
+        }
+    }
+    ~ExcelDynamicReader() => Dispose(false);
 }

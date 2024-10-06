@@ -12,7 +12,7 @@ public class DynamicReaderTests
     [Fact]
     public void Read()
     {
-        var reader = new ExcelDynamicReader(RegularFile);
+        using var reader = new ExcelDynamicReader(RegularFile);
         var results = reader.Read("Sheet 1").ToArray();
         Assert.NotEmpty(results);
     }
@@ -20,7 +20,7 @@ public class DynamicReaderTests
     [Fact]
     public void ReadDifferentTypes()
     {
-        var reader = new ExcelDynamicReader(DifferentTypesFile);
+        using var reader = new ExcelDynamicReader(DifferentTypesFile);
         var results = reader.Read().ToArray();
         Assert.NotEmpty(results);
 
@@ -35,7 +35,7 @@ public class DynamicReaderTests
     [Fact]
     public void ReadAll()
     {
-        var reader = new ExcelDynamicReader(MultipleSheetsFile);
+        using var reader = new ExcelDynamicReader(MultipleSheetsFile);
         var results = reader.ReadAll().ToArray();
         Assert.NotEmpty(results);
     }
@@ -43,7 +43,7 @@ public class DynamicReaderTests
     [Fact]
     public void ReadDifficult()
     {
-        var reader = new ExcelDynamicReader(DifficultFile);
+        using var reader = new ExcelDynamicReader(DifficultFile);
         var results = reader.Read().ToArray();
         Assert.NotEmpty(results);
         Assert.Equal(results.First().Count, results.Last().Count);
