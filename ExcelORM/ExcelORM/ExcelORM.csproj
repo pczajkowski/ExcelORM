@@ -14,7 +14,7 @@
 	<Authors>Piotr Czajkowski</Authors>
 	<Description>Simple library to read/write C# objects from/to Excel files. </Description>
 	<RepositoryType>GitHub</RepositoryType>
-	<PackageReleaseNotes>Write now has headerRowIndex for append.</PackageReleaseNotes>
+	<PackageReleaseNotes>Constructors now accept IXLWorkbook. Implemented IDisposable.</PackageReleaseNotes>
     </PropertyGroup>
 
     <ItemGroup>
