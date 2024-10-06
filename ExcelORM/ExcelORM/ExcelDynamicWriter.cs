@@ -4,7 +4,7 @@ using ExcelORM.Models;
 
 namespace ExcelORM;
 
-public class ExcelDynamicWriter
+public class ExcelDynamicWriter : IDisposable
 {
     private readonly IXLWorkbook xlWorkbook;
     public ExcelDynamicWriter(string? path = null)
@@ -74,5 +74,20 @@ public class ExcelDynamicWriter
     {
         xlWorkbook.SaveAs(path);
         converter?.MakeCompatible(path);
-    } 
+    }
+
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            xlWorkbook?.Dispose();
+        }
+    }
+    ~ExcelDynamicWriter() => Dispose(false);
 }

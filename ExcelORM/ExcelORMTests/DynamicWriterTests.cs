@@ -18,7 +18,7 @@ public class DynamicWriterTests
         var results = reader.Read().ToArray();
         Assert.NotEmpty(results);
 
-        var writer = new ExcelDynamicWriter();
+        using var writer = new ExcelDynamicWriter();
         writer.Write(results);
         writer.SaveAs(testFile);
 
@@ -41,7 +41,7 @@ public class DynamicWriterTests
         var results = reader.ReadAll().ToArray();
         Assert.NotEmpty(results);
         
-        var writer = new ExcelDynamicWriter();
+        using var writer = new ExcelDynamicWriter();
         writer.WriteAll(results);
         writer.SaveAs(testFile);
 
@@ -65,7 +65,7 @@ public class DynamicWriterTests
         Assert.NotEmpty(results);
 
         using var writeWorkbook = new XLWorkbook();
-        var writer = new ExcelDynamicWriter(writeWorkbook);
+        using var writer = new ExcelDynamicWriter(writeWorkbook);
         writer.Write(results);
 
         using var savedReader = new ExcelDynamicReader(writeWorkbook);
