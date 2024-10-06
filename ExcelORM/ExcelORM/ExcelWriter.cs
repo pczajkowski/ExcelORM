@@ -6,7 +6,7 @@ using ExcelORM.Models;
 
 namespace ExcelORM;
 
-public class ExcelWriter
+public class ExcelWriter : IDisposable
 {
     private readonly IXLWorkbook xlWorkbook;
     public ExcelWriter(string? path = null)
@@ -119,4 +119,19 @@ public class ExcelWriter
         xlWorkbook.SaveAs(path);
         converter?.MakeCompatible(path);
     } 
+
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            xlWorkbook?.Dispose();
+        }
+    }
+    ~ExcelWriter() => Dispose(false);
 }

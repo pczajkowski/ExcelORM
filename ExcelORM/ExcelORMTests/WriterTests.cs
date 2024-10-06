@@ -26,7 +26,7 @@ public class WriterTests
         testFile = Path.ChangeExtension(testFile, "xlsx");
 
         const string worksheetName = "Test";
-        var writer = new ExcelWriter(testFile);
+        using var writer = new ExcelWriter(testFile);
         writer.Write(arrayOfThree, worksheetName);
         writer.SaveAs(testFile);
 
@@ -51,7 +51,7 @@ public class WriterTests
         var testFile = Path.GetRandomFileName();
         testFile = Path.ChangeExtension(testFile, "xlsx");
 
-        var writer = new ExcelWriter(testFile);
+        using var writer = new ExcelWriter(testFile);
         writer.Write(arrayOfThree);
         writer.SaveAs(testFile);
 
@@ -76,7 +76,7 @@ public class WriterTests
         File.Copy(ForAppend, testFile);
 
         uint headerRowIndex = 3;
-        var writer = new ExcelWriter(testFile);
+        using var writer = new ExcelWriter(testFile);
         writer.Write(arrayOfThree, append: true, headerRowIndex: headerRowIndex);
         writer.SaveAs(testFile);
 
@@ -99,7 +99,7 @@ public class WriterTests
         testFile = Path.ChangeExtension(testFile, "xlsx");
         File.Copy(ForAppendHeaderFirst, testFile);
 
-        var writer = new ExcelWriter(testFile);
+        using var writer = new ExcelWriter(testFile);
         writer.Write(arrayOfThree, append: true);
         writer.SaveAs(testFile);
 
@@ -130,7 +130,7 @@ public class WriterTests
         
         var list = new List<TestTypes>{ expected };
         
-        var writer = new ExcelWriter(testFile);
+        using var writer = new ExcelWriter(testFile);
         writer.Write(list);
         writer.SaveAs(testFile);
 
@@ -161,7 +161,7 @@ public class WriterTests
         testFile = Path.ChangeExtension(testFile, "xlsx");
 
         const string worksheetName = "Test";
-        var writer = new ExcelWriter(testFile);
+        using var writer = new ExcelWriter(testFile);
         writer.Write(arrayWithSkip, worksheetName);
         writer.SaveAs(testFile);
 
@@ -192,7 +192,7 @@ public class WriterTests
         testFile = Path.ChangeExtension(testFile, "xlsx");
 
         const string worksheetName = "Test";
-        var writer = new ExcelWriter(testFile);
+        using var writer = new ExcelWriter(testFile);
         writer.Write(arrayWithSkipMiddle, worksheetName);
         writer.SaveAs(testFile);
 
@@ -223,7 +223,7 @@ public class WriterTests
         var testFile = Path.GetRandomFileName();
         testFile = Path.ChangeExtension(testFile, "xlsx");
 
-        var writer = new ExcelWriter(testFile);
+        using var writer = new ExcelWriter(testFile);
         writer.Write(arrayWithFormulas);
         writer.SaveAs(testFile);
 
@@ -252,7 +252,7 @@ public class WriterTests
         var testFile = Path.GetRandomFileName();
         testFile = Path.ChangeExtension(testFile, "xlsx");
 
-        var writer = new ExcelWriter(testFile);
+        using var writer = new ExcelWriter(testFile);
         writer.Write(arrayNumbersWithFormulas);
         writer.SaveAs(testFile);
 
@@ -282,7 +282,7 @@ public class WriterTests
         var testFile = Path.GetRandomFileName();
         testFile = Path.ChangeExtension(testFile, "xlsx");
 
-        var writer = new ExcelWriter(testFile);
+        using var writer = new ExcelWriter(testFile);
         writer.Write(arrayWithHyperlinks);
         writer.SaveAs(testFile);
 
@@ -306,7 +306,7 @@ public class WriterTests
     {
         using var workbook = new XLWorkbook();
         const string worksheetName = "Test";
-        var writer = new ExcelWriter(workbook);
+        using var writer = new ExcelWriter(workbook);
         writer.Write(arrayOfThree, worksheetName);
 
         var reader = new ExcelReader(workbook);
