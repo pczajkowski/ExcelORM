@@ -15,7 +15,7 @@ public class ReaderTests
     [Fact]
     public void Read()
     {
-        var reader = new ExcelReader(RegularFile);
+        using var reader = new ExcelReader(RegularFile);
         var results = reader.Read<Test>().ToArray();
         Assert.NotEmpty(results);
     }
@@ -23,11 +23,11 @@ public class ReaderTests
     [Fact]
     public void ReadHidden()
     {
-        var reader = new ExcelReader(HiddenFile);
+        using var reader = new ExcelReader(HiddenFile);
         var results = reader.Read<Test>().ToArray();
         Assert.NotEmpty(results);
 
-        var readerHidden = new ExcelReader(HiddenFile) { SkipHidden = true };
+        using var readerHidden = new ExcelReader(HiddenFile) { SkipHidden = true };
         var resultsHidden = readerHidden.Read<Test>().ToArray();
         Assert.NotEmpty(resultsHidden);
         Assert.NotEqual(results.Length, resultsHidden.Length);
@@ -36,11 +36,11 @@ public class ReaderTests
     [Fact]
     public void ReadFiltered()
     {
-        var reader = new ExcelReader(FilteredFile);
+        using var reader = new ExcelReader(FilteredFile);
         var results = reader.Read<Test>().ToArray();
         Assert.NotEmpty(results);
 
-        var readerFiltered = new ExcelReader(FilteredFile) { ObeyFilter = true };
+        using var readerFiltered = new ExcelReader(FilteredFile) { ObeyFilter = true };
         var resultsFiltered = readerFiltered.Read<Test>().ToArray();
         Assert.NotEmpty(resultsFiltered);
         Assert.NotEqual(results.Length, resultsFiltered.Length);
@@ -49,7 +49,7 @@ public class ReaderTests
     [Fact]
     public void ReadDifficult()
     {
-        var reader = new ExcelReader(DifficultFile);
+        using var reader = new ExcelReader(DifficultFile);
         var results = reader.Read<Test>("Tab").ToArray();
         Assert.NotEmpty(results);
 
@@ -66,7 +66,7 @@ public class ReaderTests
     [Fact]
     public void ReadMultipleSheets()
     {
-        var reader = new ExcelReader(MultipleSheetsFile);
+        using var reader = new ExcelReader(MultipleSheetsFile);
         var results = reader.ReadAll<Test>().ToArray();
         Assert.NotEmpty(results);
         Assert.Equal(6, results.Length);
@@ -75,7 +75,7 @@ public class ReaderTests
     [Fact]
     public void ReadDifferentTypes()
     {
-        var reader = new ExcelReader(DifferentTypesFile);
+        using var reader = new ExcelReader(DifferentTypesFile);
         var results = reader.Read<TestTypes>().ToArray();
         Assert.NotEmpty(results);
     }
@@ -83,7 +83,7 @@ public class ReaderTests
     [Fact]
     public void ReadDifferentTypesWithSkip()
     {
-        var reader = new ExcelReader(DifferentTypesFile);
+        using var reader = new ExcelReader(DifferentTypesFile);
         var results = reader.Read<TestSkip>().ToArray();
         Assert.NotEmpty(results);
         Assert.All(results, x => Assert.Null(x.Text));
@@ -94,7 +94,7 @@ public class ReaderTests
     [Fact]
     public void ReadDifferentTypesWithSkipMiddle()
     {
-        var reader = new ExcelReader(DifferentTypesFile);
+        using var reader = new ExcelReader(DifferentTypesFile);
         var results = reader.Read<TestSkipMiddle>().ToArray();
         Assert.NotEmpty(results);
         Assert.NotNull(results.FirstOrDefault(x => x.Text != null));
@@ -105,7 +105,7 @@ public class ReaderTests
     [Fact]
     public void ReadWithFormula()
     {
-        var reader = new ExcelReader(WithFormulaFile);
+        using var reader = new ExcelReader(WithFormulaFile);
         var results = reader.Read<TestWithFormula>().ToArray();
         Assert.NotEmpty(results);
     }

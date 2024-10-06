@@ -30,7 +30,7 @@ public class WriterTests
         writer.Write(arrayOfThree, worksheetName);
         writer.SaveAs(testFile);
 
-        var reader = new ExcelReader(testFile);
+        using var reader = new ExcelReader(testFile);
         var readArray = reader.Read<Test>(worksheetName).ToArray();
         Assert.Equal(3, readArray.Length);
 
@@ -40,8 +40,8 @@ public class WriterTests
         writer.Write(listOfTwo, worksheetName, true);
         writer.SaveAs(testFile);
         
-        reader = new ExcelReader(testFile);
-        Assert.Equal(5, reader.Read<Test>(worksheetName).Count());
+        using var newReader = new ExcelReader(testFile);
+        Assert.Equal(5, newReader.Read<Test>(worksheetName).Count());
         File.Delete(testFile);
     }
     
@@ -55,14 +55,14 @@ public class WriterTests
         writer.Write(arrayOfThree);
         writer.SaveAs(testFile);
 
-        var reader = new ExcelReader(testFile);
+        using var reader = new ExcelReader(testFile);
         Assert.Equal(arrayOfThree.Length, reader.Read<Test>().Count());
 
         writer.Write(listOfTwo, append: true);
         writer.SaveAs(testFile);
         
-        reader = new ExcelReader(testFile);
-        Assert.Equal(5, reader.Read<Test>().Count());
+        using var newReader = new ExcelReader(testFile);
+        Assert.Equal(5, newReader.Read<Test>().Count());
         File.Delete(testFile);
     }
 
@@ -80,7 +80,7 @@ public class WriterTests
         writer.Write(arrayOfThree, append: true, headerRowIndex: headerRowIndex);
         writer.SaveAs(testFile);
 
-        var reader = new ExcelReader(testFile);
+        using var reader = new ExcelReader(testFile);
         var readArray = reader.Read<Test>(startFrom: headerRowIndex).ToArray();
         Assert.Equal(6, readArray.Length);
 
@@ -103,7 +103,7 @@ public class WriterTests
         writer.Write(arrayOfThree, append: true);
         writer.SaveAs(testFile);
 
-        var reader = new ExcelReader(testFile);
+        using var reader = new ExcelReader(testFile);
         var readArray = reader.Read<Test>().ToArray();
         Assert.Equal(6, readArray.Length);
 
@@ -134,7 +134,7 @@ public class WriterTests
         writer.Write(list);
         writer.SaveAs(testFile);
 
-        var reader = new ExcelReader(testFile);
+        using var reader = new ExcelReader(testFile);
         var result = reader.Read<TestTypes>().ToList();
         Assert.Single(result);
         var first = result.First();
@@ -165,7 +165,7 @@ public class WriterTests
         writer.Write(arrayWithSkip, worksheetName);
         writer.SaveAs(testFile);
 
-        var reader = new ExcelReader(testFile);
+        using var reader = new ExcelReader(testFile);
         var readArray = reader.Read<TestSkip>(worksheetName).ToArray();
         Assert.Equal(arrayWithSkip.Length, readArray.Length);
 
@@ -196,7 +196,7 @@ public class WriterTests
         writer.Write(arrayWithSkipMiddle, worksheetName);
         writer.SaveAs(testFile);
 
-        var reader = new ExcelReader(testFile);
+        using var reader = new ExcelReader(testFile);
         var readArray = reader.Read<TestSkipMiddle>(worksheetName).ToArray();
         Assert.Equal(arrayWithSkipMiddle.Length, readArray.Length);
 
@@ -227,7 +227,7 @@ public class WriterTests
         writer.Write(arrayWithFormulas);
         writer.SaveAs(testFile);
 
-        var reader = new ExcelReader(testFile);
+        using var reader = new ExcelReader(testFile);
         var readArray = reader.Read<TestWithFormula>().ToArray();
         Assert.Equal(arrayWithFormulas.Length, readArray.Length);
 
@@ -256,7 +256,7 @@ public class WriterTests
         writer.Write(arrayNumbersWithFormulas);
         writer.SaveAs(testFile);
 
-        var reader = new ExcelReader(testFile);
+        using var reader = new ExcelReader(testFile);
         var readArray = reader.Read<TestNumbersWithFormula>().ToArray();
         Assert.Equal(arrayNumbersWithFormulas.Length, readArray.Length);
 
@@ -286,7 +286,7 @@ public class WriterTests
         writer.Write(arrayWithHyperlinks);
         writer.SaveAs(testFile);
 
-        var reader = new ExcelReader(testFile);
+        using var reader = new ExcelReader(testFile);
         var readArray = reader.Read<TestWithHyperlink>().ToArray();
         Assert.Equal(arrayWithFormulas.Length, readArray.Length);
 
@@ -309,7 +309,7 @@ public class WriterTests
         using var writer = new ExcelWriter(workbook);
         writer.Write(arrayOfThree, worksheetName);
 
-        var reader = new ExcelReader(workbook);
+        using var reader = new ExcelReader(workbook);
         var readArray = reader.Read<Test>(worksheetName).ToArray();
         Assert.Equal(3, readArray.Length);
 

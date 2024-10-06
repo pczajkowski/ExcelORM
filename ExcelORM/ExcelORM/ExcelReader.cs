@@ -1,11 +1,10 @@
 using System.Runtime.CompilerServices;
 using ClosedXML.Excel;
-using ExcelORM.Interfaces;
 using ExcelORM.Models;
 
 namespace ExcelORM;
 
-public class ExcelReader
+public class ExcelReader : IDisposable
 {
     private readonly IXLWorkbook xlWorkbook;
     public bool SkipHidden { get; set; }
@@ -110,4 +109,19 @@ public class ExcelReader
                 yield return item;
         }
     }
+
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            xlWorkbook?.Dispose();
+        }
+    }
+    ~ExcelReader() => Dispose(false);
 }
