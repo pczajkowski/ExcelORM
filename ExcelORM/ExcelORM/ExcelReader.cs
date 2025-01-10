@@ -38,16 +38,24 @@ public class ExcelReader : IDisposable
                 var property = type.GetProperty(item.PropertyName);
                 if (property == null) continue;
 
-                if (property.PropertyType.BaseType == typeof(SpecialBase) &&
-                    RuntimeHelpers.GetUninitializedObject(property.PropertyType) is SpecialBase special)
+                try
                 {
-                    special.GetValueFromCell(cell);
+                    if (property.PropertyType.BaseType == typeof(SpecialBase) &&
+                        RuntimeHelpers.GetUninitializedObject(property.PropertyType) is SpecialBase special)
+                    {
+                        special.GetValueFromCell(cell);
 
-                    property.SetValue(current, special);
-                    continue;
+                        property.SetValue(current, special);
+                        continue;
+                    }
+
+                    current.SetPropertyValue(property, cell.Value);
                 }
-
-                current.SetPropertyValue(property, cell.Value);
+                catch (ArgumentException e)
+                {
+                    e.Data.Add("Location", $"{cell.Address.ColumnLetter}{cell.Address.RowNumber}");;
+                    throw;
+                }
             }
 
             yield return current;
