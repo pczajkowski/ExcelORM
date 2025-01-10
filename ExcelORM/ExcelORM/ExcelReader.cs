@@ -6,18 +6,18 @@ namespace ExcelORM;
 
 public class ExcelReader : IDisposable
 {
-    private readonly IXLWorkbook xlWorkbook;
+    private readonly IXLWorkbook _xlWorkbook;
     public bool SkipHidden { get; set; }
     public bool ObeyFilter { get; set; }
 
     public ExcelReader(IXLWorkbook workbook)
     {
-        xlWorkbook = workbook ?? throw new ArgumentNullException(nameof(workbook));
+        _xlWorkbook = workbook ?? throw new ArgumentNullException(nameof(workbook));
     }
 
     public ExcelReader(string? path)
     {
-        xlWorkbook = new XLWorkbook(path);
+        _xlWorkbook = new XLWorkbook(path);
     }
 
     private IEnumerable<T> ProcessRows<T>(IEnumerable<IXLRow> rows, List<Mapping> mapping) where T : class
@@ -53,7 +53,7 @@ public class ExcelReader : IDisposable
                 }
                 catch (ArgumentException e)
                 {
-                    e.Data.Add("Location", $"{cell.Address.ColumnLetter}{cell.Address.RowNumber}");;
+                    e.Data.Add("Location", $"{cell.Address.ColumnLetter}{cell.Address.RowNumber}");
                     throw;
                 }
             }
@@ -91,7 +91,7 @@ public class ExcelReader : IDisposable
 
     public IEnumerable<T> Read<T>(string? worksheetName, uint startFrom = 1, uint skip = 0) where T : class
     {
-        var worksheet = xlWorkbook.Worksheets.FirstOrDefault(x => x.Name.Equals(worksheetName, StringComparison.InvariantCultureIgnoreCase));
+        var worksheet = _xlWorkbook.Worksheets.FirstOrDefault(x => x.Name.Equals(worksheetName, StringComparison.InvariantCultureIgnoreCase));
         if (worksheet == null) yield break;
 
         foreach (var value in Read<T>(worksheet, startFrom, skip))
@@ -100,9 +100,9 @@ public class ExcelReader : IDisposable
 
     public IEnumerable<T> Read<T>(int worksheetIndex = 1, uint startFrom = 1, uint skip = 0) where T : class
     {
-        if (worksheetIndex > xlWorkbook.Worksheets.Count) yield break;
+        if (worksheetIndex > _xlWorkbook.Worksheets.Count) yield break;
 
-        var worksheet = xlWorkbook.Worksheets.FirstOrDefault(x => x.Position == worksheetIndex);
+        var worksheet = _xlWorkbook.Worksheets.FirstOrDefault(x => x.Position == worksheetIndex);
         if (worksheet == null) yield break;
 
         foreach (var value in Read<T>(worksheet, startFrom, skip))
@@ -111,7 +111,7 @@ public class ExcelReader : IDisposable
 
     public IEnumerable<T> ReadAll<T>(uint startFrom = 1, uint skip = 0) where T : class
     {
-        foreach (var worksheet in xlWorkbook.Worksheets)
+        foreach (var worksheet in _xlWorkbook.Worksheets)
         {
             foreach (var item in Read<T>(worksheet, startFrom, skip))
                 yield return item;
@@ -128,7 +128,7 @@ public class ExcelReader : IDisposable
     {
         if (disposing)
         {
-            xlWorkbook?.Dispose();
+            _xlWorkbook.Dispose();
         }
     }
     ~ExcelReader() => Dispose(false);
