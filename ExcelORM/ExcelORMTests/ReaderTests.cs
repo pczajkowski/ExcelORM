@@ -11,6 +11,7 @@ public class ReaderTests
     private const string MultipleSheetsFile = "testFiles/multipleSheets.xlsx";
     private const string DifferentTypesFile = "testFiles/differentTypes.xlsx";
     private const string WithFormulaFile = "testFiles/withFormula.xlsx";
+    private const string BadDate = "testFiles/badDate.xlsx";
     
     [Fact]
     public void Read()
@@ -108,5 +109,12 @@ public class ReaderTests
         using var reader = new ExcelReader(WithFormulaFile);
         var results = reader.Read<TestWithFormula>().ToArray();
         Assert.NotEmpty(results);
+    }
+    
+    [Fact]
+    public void BadDateThrows()
+    {
+        using var reader = new ExcelReader(BadDate);
+        Assert.Throws<ArgumentException>(() => reader.Read<TestTypes>().ToArray());
     }
 }
