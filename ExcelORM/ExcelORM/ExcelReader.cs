@@ -53,7 +53,7 @@ public class ExcelReader : IDisposable
                 }
                 catch (ArgumentException e)
                 {
-                    e.Data.Add("Location", $"{cell.Address.ColumnLetter}{cell.Address.RowNumber}");
+                    e.Data.Add("Location", $"{cell.Address.ColumnLetter}{cell.Address.RowNumber} ({cell.Worksheet.Name})");
                     throw;
                 }
             }
