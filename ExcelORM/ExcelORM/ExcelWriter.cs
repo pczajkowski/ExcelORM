@@ -56,7 +56,7 @@ public class ExcelWriter : IDisposable
             if (property.Skip()) continue;
 
             var mapped = mapping.FirstOrDefault(x => x.PropertyName != null && x.PropertyName.Equals(property.Name));
-            if (mapped == null || mapped.Position == null) continue;
+            if (mapped?.Position == null) continue;
 
             WriteCell(value, property, worksheet.Cell(rowIndex, mapped.Position.Value));
         }

@@ -35,8 +35,7 @@ public class ExcelDynamicReader : IDisposable
                     continue;
                 }
 
-                if (item.Type == null) item.Type = cell.Value.ValueType();
-
+                item.Type ??= cell.Value.ValueType();
                 var cellItem = item with
                 {
                     Value = cell.Value.ToObject()
@@ -98,15 +97,12 @@ public class ExcelDynamicReader : IDisposable
 
     public IEnumerable<DynamicWorksheet> ReadAll(uint startFrom = 1, uint skip = 0)
     {
-        foreach (var worksheet in xlWorkbook.Worksheets)
+        return xlWorkbook.Worksheets.Select(worksheet => new DynamicWorksheet
         {
-            yield return new DynamicWorksheet
-            {
-                Name = worksheet.Name,
-                Position = worksheet.Position,
-                Cells = Read(worksheet, startFrom, skip)
-            };
-        }
+            Name = worksheet.Name,
+            Position = worksheet.Position,
+            Cells = Read(worksheet, startFrom, skip)
+        });
     }
 
     public void Dispose()

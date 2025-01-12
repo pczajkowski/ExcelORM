@@ -110,11 +110,7 @@ public class ExcelReader : IDisposable
 
     public IEnumerable<T> ReadAll<T>(uint startFrom = 1, uint skip = 0) where T : class
     {
-        foreach (var worksheet in xlWorkbook.Worksheets)
-        {
-            foreach (var item in Read<T>(worksheet, startFrom, skip))
-                yield return item;
-        }
+        return xlWorkbook.Worksheets.SelectMany(worksheet => Read<T>(worksheet, startFrom, skip));
     }
 
     public void Dispose()
