@@ -116,7 +116,6 @@ public class ReaderTests
     {
         using var reader = new ExcelReader(BadDate);
         var exception = Assert.Throws<ArgumentException>(() => reader.Read<TestTypes>().ToArray());
-        Assert.True(exception.Data.Contains("Location"));
-        Assert.NotEmpty(exception.Data["Location"]?.ToString() ?? string.Empty);
+        Assert.Contains("Location", exception.Message);
     }
 }
