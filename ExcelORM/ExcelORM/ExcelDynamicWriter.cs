@@ -86,7 +86,7 @@ public class ExcelDynamicWriter : IDisposable
     {
         if (disposing)
         {
-            xlWorkbook?.Dispose();
+            xlWorkbook.Dispose();
         }
     }
     ~ExcelDynamicWriter() => Dispose(false);

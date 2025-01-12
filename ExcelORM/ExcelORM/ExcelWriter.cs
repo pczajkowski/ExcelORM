@@ -19,7 +19,7 @@ public class ExcelWriter : IDisposable
         xlWorkbook = workbook ?? throw new ArgumentNullException(nameof(workbook));
     }
 
-    private static int GenerateHeader<T>(IXLWorksheet worksheet, PropertyInfo[] properties) where T : class
+    private static int GenerateHeader(IXLWorksheet worksheet, PropertyInfo[] properties)
     {
         var rowIndex = 1;
         var cellIndex = 1;
@@ -90,7 +90,7 @@ public class ExcelWriter : IDisposable
             mapping = Mapping.MapProperties<T>(headerCells);
             if (mapping == null || mapping.Count == 0) return;
         } else
-            rowIndex = GenerateHeader<T>(worksheet, properties);
+            rowIndex = GenerateHeader(worksheet, properties);
 
         if (rowIndex == null) throw new NullReferenceException(nameof(rowIndex));
 
@@ -130,7 +130,7 @@ public class ExcelWriter : IDisposable
     {
         if (disposing)
         {
-            xlWorkbook?.Dispose();
+            xlWorkbook.Dispose();
         }
     }
     ~ExcelWriter() => Dispose(false);

@@ -119,7 +119,7 @@ public class ExcelDynamicReader : IDisposable
     {
         if (disposing)
         {
-            xlWorkbook?.Dispose();
+            xlWorkbook.Dispose();
         }
     }
     ~ExcelDynamicReader() => Dispose(false);
