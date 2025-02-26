@@ -38,15 +38,17 @@ public class ExcelWriter : IDisposable
     private static void WriteCell<T>(T value, PropertyInfo property, IXLCell cell)
     {
         var valueToSet = property.GetValue(value);
-        if (valueToSet == null) return;
-
-        if (valueToSet is SpecialBase specialProperty)
+        switch (valueToSet)
         {
-            specialProperty.SetCellValue(cell);
-            return;
+            case null:
+                return;
+            case SpecialBase specialProperty:
+                specialProperty.SetCellValue(cell);
+                return;
+            default:
+                cell.Value = XLCellValue.FromObject(valueToSet);
+                break;
         }
-
-        cell.Value = XLCellValue.FromObject(valueToSet);
     }
 
     private static void WriteRowAppend<T>(T value, IXLWorksheet worksheet, PropertyInfo[] properties, int rowIndex, List<Mapping> mapping)
