@@ -6,18 +6,18 @@ namespace ExcelORMTests;
 
 public class WriterTests
 {
-    private static readonly Test[] arrayOfThree = 
-    {
+    private static readonly Test[] arrayOfThree =
+    [
         new() { Name = "Bilbo", Surname = "Baggins", Job = "Eater"},
         new() { Name = "John", Job = "Policeman"},
         new() { Name = "Bruce", Surname = "Lee", Job = "Fighter"}
-    };
+    ];
 
-    private static readonly List<Test> listOfTwo = new()
-    {
-        new() { Name = "Elon", Surname = "Musk", Job = "Comedian"},
-        new() { Name = "Donald", Surname = "Trump", Job = "Bankrupt"},
-    };
+    private static readonly List<Test> listOfTwo =
+    [
+        new() { Name = "Elon", Surname = "Musk", Job = "Comedian" },
+        new() { Name = "Donald", Surname = "Trump", Job = "Bankrupt" }
+    ];
 
     [Fact]
     public void WriteWithAppend()
@@ -173,10 +173,10 @@ public class WriterTests
     }
 
     private static readonly TestSkip[] arrayWithSkip =
-    {
+    [
         new() {Text = "Lorem", Date = DateTime.Now.AddHours(1), Int = 1},
-        new() {Text = "Ipsum", Date = null, Int = 2},
-    };
+        new() {Text = "Ipsum", Date = null, Int = 2}
+    ];
 
     [Fact]
     public void WriteWithSkip()
@@ -204,10 +204,10 @@ public class WriterTests
     }
 
     private static readonly TestSkipMiddle[] arrayWithSkipMiddle =
-    {
+    [
         new() {Text = "Lorem", Date = DateTime.Now.AddHours(1), Int = 1},
-        new() {Text = "Ipsum", Date = DateTime.Now.AddHours(2), Int = 2},
-    };
+        new() {Text = "Ipsum", Date = DateTime.Now.AddHours(2), Int = 2}
+    ];
 
     [Fact]
     public void WriteWithSkipMiddle()
@@ -235,11 +235,11 @@ public class WriterTests
     }
 
     private static readonly TestWithFormula[] arrayWithFormulas =
-    {
+    [
         new() { Name = "Bilbo", Surname = "Baggins", Job = "Eater", FullName = new Formula{ FormulaA1 = "B2&C2" } },
         new() { Name = "John", Job = "Policeman", FullName = new Formula{ FormulaA1 = "B3&C3" } },
-        new() { Name = "Bruce", Surname = "Lee", Job = "Fighter", FullName = new Formula{ FormulaA1 = "B4&C4" } },
-    };
+        new() { Name = "Bruce", Surname = "Lee", Job = "Fighter", FullName = new Formula{ FormulaA1 = "B4&C4" } }
+    ];
 
     [Fact]
     public void WriteWithFormula()
@@ -265,10 +265,10 @@ public class WriterTests
     }
 
     private static readonly TestNumbersWithFormula[] arrayNumbersWithFormulas =
-    {
+    [
         new(){ First = 1, Second = 2, Sum = new Formula{FormulaA1 = "SUM(A2:B2)"} },
-        new(){ First = 2, Second = 3, Sum = new Formula{FormulaA1 = "SUM(A3:B3)"} },
-    };
+        new(){ First = 2, Second = 3, Sum = new Formula{FormulaA1 = "SUM(A3:B3)"} }
+    ];
 
     [Fact]
     public void NumbersWithFormula()
@@ -294,11 +294,11 @@ public class WriterTests
     }
 
     private static readonly TestWithHyperlink[] arrayWithHyperlinks =
-    {
+    [
         new() { Name = "Bilbo", Surname = "Baggins", Job = "Eater", Link = new Hyperlink{ Value = "Wiki", Link = new XLHyperlink("https://en.wikipedia.org/wiki/Bilbo_Baggins") } },
         new() { Name = "John", Job = "Policeman", Link = new Hyperlink{ Value = "CNN", Link = new XLHyperlink("https://edition.cnn.com/2023/12/10/us/john-okeefe-boston-police-death-cec/index.html") } },
         new() { Name = "Bruce", Surname = "Lee", Job = "Fighter", Link = new Hyperlink{ Value = "IMDb", Link = new XLHyperlink("https://www.imdb.com/name/nm0000045/") } }
-    };
+    ];
 
     [Fact]
     public void WriteWithHyperlink()
