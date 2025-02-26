@@ -75,22 +75,24 @@ public class ExcelWriter : IDisposable
         }
     }
 
-    private static void Write<T>(IEnumerable<T> values, IXLWorksheet worksheet, bool append, uint? headerRowIndex = null) where T : class
+    private static void Write<T>(IEnumerable<T> values, IXLWorksheet worksheet, bool append, uint? headerRowIndex = null, uint? appendFrom = null) where T : class
     {
-        if (!values.Any()) return;
-
-        int? rowIndex;
         var properties = typeof(T).GetProperties();
         List<Mapping>? mapping = [];
 
+        var rowIndex = (append, startFrom: appendFrom) switch
+        { 
+            (true, not null) => (int)appendFrom,
+            (true, null) => worksheet.LastRowUsed()?.RowNumber() + 1,
+            _ => GenerateHeader(worksheet, properties) 
+        };
+
         if (append)
         {
-            rowIndex = worksheet.LastRowUsed()?.RowNumber() + 1;
             var headerCells = headerRowIndex != null ? worksheet.Row((int)headerRowIndex).CellsUsed() : worksheet.FirstRowUsed()?.CellsUsed();
             mapping = Mapping.MapProperties<T>(headerCells);
             if (mapping == null || mapping.Count == 0) return;
-        } else
-            rowIndex = GenerateHeader(worksheet, properties);
+        }
 
         if (rowIndex == null) throw new NullReferenceException(nameof(rowIndex));
 
