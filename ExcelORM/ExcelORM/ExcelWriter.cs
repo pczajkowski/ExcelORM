@@ -105,7 +105,7 @@ public class ExcelWriter : IDisposable
         }
     }
 
-    public void Write<T>(IEnumerable<T> values, string? worksheetName = null, bool append = false, uint? headerRowIndex = null) where T : class
+    public void Write<T>(IEnumerable<T> values, string? worksheetName = null, bool append = false, uint? headerRowIndex = null, uint? appendFrom = null) where T : class
     {
         var xlWorksheet = xlWorkbook.Worksheets.FirstOrDefault(x => x.Name.Equals(worksheetName, StringComparison.InvariantCultureIgnoreCase));
         
@@ -113,7 +113,7 @@ public class ExcelWriter : IDisposable
             xlWorkbook.AddWorksheet(worksheetName)
             : xlWorkbook.Worksheets.Count == 0 ? xlWorkbook.AddWorksheet() : xlWorkbook.Worksheets.First();
 
-        Write(values, xlWorksheet, append, headerRowIndex);
+        Write(values, xlWorksheet, append, headerRowIndex, appendFrom);
     }
 
     public void SaveAs(string path, IExcelConverter? converter = null)
