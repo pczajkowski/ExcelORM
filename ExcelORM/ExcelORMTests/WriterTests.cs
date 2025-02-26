@@ -6,14 +6,14 @@ namespace ExcelORMTests;
 
 public class WriterTests
 {
-    private static readonly Test[] arrayOfThree =
+    private static readonly Test[] ArrayOfThree =
     [
         new() { Name = "Bilbo", Surname = "Baggins", Job = "Eater"},
         new() { Name = "John", Job = "Policeman"},
         new() { Name = "Bruce", Surname = "Lee", Job = "Fighter"}
     ];
 
-    private static readonly List<Test> listOfTwo =
+    private static readonly List<Test> ListOfTwo =
     [
         new() { Name = "Elon", Surname = "Musk", Job = "Comedian" },
         new() { Name = "Donald", Surname = "Trump", Job = "Bankrupt" }
@@ -27,7 +27,7 @@ public class WriterTests
 
         const string worksheetName = "Test";
         using var writer = new ExcelWriter(testFile);
-        writer.Write(arrayOfThree, worksheetName);
+        writer.Write(ArrayOfThree, worksheetName);
         writer.SaveAs(testFile);
 
         using var reader = new ExcelReader(testFile);
@@ -35,9 +35,9 @@ public class WriterTests
         Assert.Equal(3, readArray.Length);
 
         for (int i = 0; i < readArray.Length; i++)
-            Assert.Equal(arrayOfThree[i], readArray[i]);
+            Assert.Equal(ArrayOfThree[i], readArray[i]);
 
-        writer.Write(listOfTwo, worksheetName, true);
+        writer.Write(ListOfTwo, worksheetName, true);
         writer.SaveAs(testFile);
         
         using var newReader = new ExcelReader(testFile);
@@ -52,13 +52,13 @@ public class WriterTests
         testFile = Path.ChangeExtension(testFile, "xlsx");
 
         using var writer = new ExcelWriter(testFile);
-        writer.Write(arrayOfThree);
+        writer.Write(ArrayOfThree);
         writer.SaveAs(testFile);
 
         using var reader = new ExcelReader(testFile);
-        Assert.Equal(arrayOfThree.Length, reader.Read<Test>().Count());
+        Assert.Equal(ArrayOfThree.Length, reader.Read<Test>().Count());
 
-        writer.Write(listOfTwo, append: true);
+        writer.Write(ListOfTwo, append: true);
         writer.SaveAs(testFile);
         
         using var newReader = new ExcelReader(testFile);
@@ -77,15 +77,15 @@ public class WriterTests
 
         uint headerRowIndex = 3;
         using var writer = new ExcelWriter(testFile);
-        writer.Write(arrayOfThree, append: true, headerRowIndex: headerRowIndex);
+        writer.Write(ArrayOfThree, append: true, headerRowIndex: headerRowIndex);
         writer.SaveAs(testFile);
 
         using var reader = new ExcelReader(testFile);
         var readArray = reader.Read<Test>(startFrom: headerRowIndex).ToArray();
         Assert.Equal(6, readArray.Length);
 
-        for (int i = 0; i < arrayOfThree.Length; i++)
-            Assert.Equal(arrayOfThree[i], readArray[i+3]);
+        for (int i = 0; i < ArrayOfThree.Length; i++)
+            Assert.Equal(ArrayOfThree[i], readArray[i+3]);
 
         File.Delete(testFile);
     }
@@ -101,15 +101,15 @@ public class WriterTests
 
         uint headerRowIndex = 3;
         using var writer = new ExcelWriter(testFile);
-        writer.Write(arrayOfThree, append: true, headerRowIndex: headerRowIndex, appendFrom: 7);
+        writer.Write(ArrayOfThree, append: true, headerRowIndex: headerRowIndex, appendFrom: 7);
         writer.SaveAs(testFile);
 
         using var reader = new ExcelReader(testFile);
         var readArray = reader.Read<Test>(startFrom: headerRowIndex).ToArray();
         Assert.Equal(6, readArray.Length);
 
-        for (int i = 0; i < arrayOfThree.Length; i++)
-            Assert.Equal(arrayOfThree[i], readArray[i+3]);
+        for (int i = 0; i < ArrayOfThree.Length; i++)
+            Assert.Equal(ArrayOfThree[i], readArray[i+3]);
 
         File.Delete(testFile);
     }
@@ -124,15 +124,15 @@ public class WriterTests
         File.Copy(ForAppendHeaderFirst, testFile);
 
         using var writer = new ExcelWriter(testFile);
-        writer.Write(arrayOfThree, append: true);
+        writer.Write(ArrayOfThree, append: true);
         writer.SaveAs(testFile);
 
         using var reader = new ExcelReader(testFile);
         var readArray = reader.Read<Test>().ToArray();
         Assert.Equal(6, readArray.Length);
 
-        for (int i = 0; i < arrayOfThree.Length; i++)
-            Assert.Equal(arrayOfThree[i], readArray[i + 3]);
+        for (int i = 0; i < ArrayOfThree.Length; i++)
+            Assert.Equal(ArrayOfThree[i], readArray[i + 3]);
 
         File.Delete(testFile);
     }
@@ -172,7 +172,7 @@ public class WriterTests
         File.Delete(testFile);
     }
 
-    private static readonly TestSkip[] arrayWithSkip =
+    private static readonly TestSkip[] ArrayWithSkip =
     [
         new() {Text = "Lorem", Date = DateTime.Now.AddHours(1), Int = 1},
         new() {Text = "Ipsum", Date = null, Int = 2}
@@ -186,24 +186,24 @@ public class WriterTests
 
         const string worksheetName = "Test";
         using var writer = new ExcelWriter(testFile);
-        writer.Write(arrayWithSkip, worksheetName);
+        writer.Write(ArrayWithSkip, worksheetName);
         writer.SaveAs(testFile);
 
         using var reader = new ExcelReader(testFile);
         var readArray = reader.Read<TestSkip>(worksheetName).ToArray();
-        Assert.Equal(arrayWithSkip.Length, readArray.Length);
+        Assert.Equal(ArrayWithSkip.Length, readArray.Length);
 
         for (int i = 0; i < readArray.Length; i++)
         {
-            Assert.NotEqual(arrayWithSkip[i].Text, readArray[i].Text);
-            Assert.Equal(arrayWithSkip[i].Date.ToString(), readArray[i].Date.ToString());
-            Assert.Equal(arrayWithSkip[i].Int, readArray[i].Int);
+            Assert.NotEqual(ArrayWithSkip[i].Text, readArray[i].Text);
+            Assert.Equal(ArrayWithSkip[i].Date.ToString(), readArray[i].Date.ToString());
+            Assert.Equal(ArrayWithSkip[i].Int, readArray[i].Int);
         }
 
         File.Delete(testFile);
     }
 
-    private static readonly TestSkipMiddle[] arrayWithSkipMiddle =
+    private static readonly TestSkipMiddle[] ArrayWithSkipMiddle =
     [
         new() {Text = "Lorem", Date = DateTime.Now.AddHours(1), Int = 1},
         new() {Text = "Ipsum", Date = DateTime.Now.AddHours(2), Int = 2}
@@ -217,24 +217,24 @@ public class WriterTests
 
         const string worksheetName = "Test";
         using var writer = new ExcelWriter(testFile);
-        writer.Write(arrayWithSkipMiddle, worksheetName);
+        writer.Write(ArrayWithSkipMiddle, worksheetName);
         writer.SaveAs(testFile);
 
         using var reader = new ExcelReader(testFile);
         var readArray = reader.Read<TestSkipMiddle>(worksheetName).ToArray();
-        Assert.Equal(arrayWithSkipMiddle.Length, readArray.Length);
+        Assert.Equal(ArrayWithSkipMiddle.Length, readArray.Length);
 
         for (int i = 0; i < readArray.Length; i++)
         {
-            Assert.Equal(arrayWithSkipMiddle[i].Text, readArray[i].Text);
-            Assert.NotEqual(arrayWithSkipMiddle[i].Date.ToString(), readArray[i].Date.ToString());
-            Assert.Equal(arrayWithSkipMiddle[i].Int, readArray[i].Int);
+            Assert.Equal(ArrayWithSkipMiddle[i].Text, readArray[i].Text);
+            Assert.NotEqual(ArrayWithSkipMiddle[i].Date.ToString(), readArray[i].Date.ToString());
+            Assert.Equal(ArrayWithSkipMiddle[i].Int, readArray[i].Int);
         }
 
         File.Delete(testFile);
     }
 
-    private static readonly TestWithFormula[] arrayWithFormulas =
+    private static readonly TestWithFormula[] ArrayWithFormulas =
     [
         new() { Name = "Bilbo", Surname = "Baggins", Job = "Eater", FullName = new Formula{ FormulaA1 = "B2&C2" } },
         new() { Name = "John", Job = "Policeman", FullName = new Formula{ FormulaA1 = "B3&C3" } },
@@ -248,12 +248,12 @@ public class WriterTests
         testFile = Path.ChangeExtension(testFile, "xlsx");
 
         using var writer = new ExcelWriter(testFile);
-        writer.Write(arrayWithFormulas);
+        writer.Write(ArrayWithFormulas);
         writer.SaveAs(testFile);
 
         using var reader = new ExcelReader(testFile);
         var readArray = reader.Read<TestWithFormula>().ToArray();
-        Assert.Equal(arrayWithFormulas.Length, readArray.Length);
+        Assert.Equal(ArrayWithFormulas.Length, readArray.Length);
 
         foreach (var item in readArray)
         {
@@ -264,7 +264,7 @@ public class WriterTests
         File.Delete(testFile);
     }
 
-    private static readonly TestNumbersWithFormula[] arrayNumbersWithFormulas =
+    private static readonly TestNumbersWithFormula[] ArrayNumbersWithFormulas =
     [
         new(){ First = 1, Second = 2, Sum = new Formula{FormulaA1 = "SUM(A2:B2)"} },
         new(){ First = 2, Second = 3, Sum = new Formula{FormulaA1 = "SUM(A3:B3)"} }
@@ -277,12 +277,12 @@ public class WriterTests
         testFile = Path.ChangeExtension(testFile, "xlsx");
 
         using var writer = new ExcelWriter(testFile);
-        writer.Write(arrayNumbersWithFormulas);
+        writer.Write(ArrayNumbersWithFormulas);
         writer.SaveAs(testFile);
 
         using var reader = new ExcelReader(testFile);
         var readArray = reader.Read<TestNumbersWithFormula>().ToArray();
-        Assert.Equal(arrayNumbersWithFormulas.Length, readArray.Length);
+        Assert.Equal(ArrayNumbersWithFormulas.Length, readArray.Length);
 
         foreach (var item in readArray)
         {
@@ -293,7 +293,7 @@ public class WriterTests
         File.Delete(testFile);
     }
 
-    private static readonly TestWithHyperlink[] arrayWithHyperlinks =
+    private static readonly TestWithHyperlink[] ArrayWithHyperlinks =
     [
         new() { Name = "Bilbo", Surname = "Baggins", Job = "Eater", Link = new Hyperlink{ Value = "Wiki", Link = new XLHyperlink("https://en.wikipedia.org/wiki/Bilbo_Baggins") } },
         new() { Name = "John", Job = "Policeman", Link = new Hyperlink{ Value = "CNN", Link = new XLHyperlink("https://edition.cnn.com/2023/12/10/us/john-okeefe-boston-police-death-cec/index.html") } },
@@ -307,19 +307,19 @@ public class WriterTests
         testFile = Path.ChangeExtension(testFile, "xlsx");
 
         using var writer = new ExcelWriter(testFile);
-        writer.Write(arrayWithHyperlinks);
+        writer.Write(ArrayWithHyperlinks);
         writer.SaveAs(testFile);
 
         using var reader = new ExcelReader(testFile);
         var readArray = reader.Read<TestWithHyperlink>().ToArray();
-        Assert.Equal(arrayWithFormulas.Length, readArray.Length);
+        Assert.Equal(ArrayWithFormulas.Length, readArray.Length);
 
         for (var i = 0; i < readArray.Length; i++)
         {
-            Assert.NotNull(arrayWithHyperlinks[i].Link);
+            Assert.NotNull(ArrayWithHyperlinks[i].Link);
             Assert.NotNull(readArray[i].Link);
-            Assert.Equal(arrayWithHyperlinks[i].Link?.Value, readArray[i].Link?.Value);
-            Assert.Equal(arrayWithHyperlinks[i].Link?.Link?.ToString(), readArray[i].Link?.Link?.ToString());
+            Assert.Equal(ArrayWithHyperlinks[i].Link?.Value, readArray[i].Link?.Value);
+            Assert.Equal(ArrayWithHyperlinks[i].Link?.Link?.ToString(), readArray[i].Link?.Link?.ToString());
         }
         
         File.Delete(testFile);
@@ -331,13 +331,13 @@ public class WriterTests
         using var workbook = new XLWorkbook();
         const string worksheetName = "Test";
         using var writer = new ExcelWriter(workbook);
-        writer.Write(arrayOfThree, worksheetName);
+        writer.Write(ArrayOfThree, worksheetName);
 
         using var reader = new ExcelReader(workbook);
         var readArray = reader.Read<Test>(worksheetName).ToArray();
         Assert.Equal(3, readArray.Length);
 
         for (int i = 0; i < readArray.Length; i++)
-            Assert.Equal(arrayOfThree[i], readArray[i]);
+            Assert.Equal(ArrayOfThree[i], readArray[i]);
     }
 }
