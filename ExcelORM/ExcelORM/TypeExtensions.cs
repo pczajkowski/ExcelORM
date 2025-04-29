@@ -18,14 +18,11 @@ public static class TypeExtensions
             return null;
         }
 
-        if (Nullable.GetUnderlyingType(property.PropertyType) != null)
+        var nullableUnderlyingType = Nullable.GetUnderlyingType(property.PropertyType);
+        if (nullableUnderlyingType is { IsEnum: true })
         {
-            var genericType = property.PropertyType.GetGenericArguments().FirstOrDefault();
-            if (genericType == null) return null;
-            
-            if (genericType.IsEnum)
-                return Enum.TryParse(genericType, value.GetText(), true, out var enumValue)
-                    ? enumValue : null;
+            return Enum.TryParse(nullableUnderlyingType, value.GetText(), true, out var enumValue)
+                ? enumValue : null;
         }
         
         return value.GetText(); 
