@@ -10,12 +10,19 @@ public static class TypeExtensions
     {
         if (property == null) return value.GetText();
         
-        if (property.PropertyType == typeof(Guid?))
+        if (property.PropertyType == typeof(Guid) || property.PropertyType == typeof(Guid?))
         {
             if (Guid.TryParse(value.GetText(), out var guid))
                 return guid;
 
-            return null;
+            if (property.PropertyType == typeof(Guid?)) return null;
+            return Guid.Empty;
+        }
+
+        if (property.PropertyType.IsEnum)
+        {
+            return Enum.TryParse(property.PropertyType, value.GetText(), true, out var enumValue)
+                ? enumValue : Enum.GetValues(property.PropertyType).GetValue(0);
         }
 
         var nullableUnderlyingType = Nullable.GetUnderlyingType(property.PropertyType);

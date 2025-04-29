@@ -14,6 +14,8 @@ It currently supports properties of types as supported by ClosedXML, so:
 - string
 - DateTime
 - TimeSpan
+- Guid
+- enum
 
 And their nullable variants.
 
