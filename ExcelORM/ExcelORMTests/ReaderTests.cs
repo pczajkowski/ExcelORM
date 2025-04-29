@@ -127,4 +127,12 @@ public class ReaderTests
         var results = reader.Read<TestAdditionalTypes>().ToArray();
         Assert.NotEmpty(results);
     }
+    
+    [Fact]
+    public void ReadAdditionalTypesNullable()
+    {
+        using var reader = new ExcelReader(AdditionalTypes);
+        var results = reader.Read<TestAdditionalTypesNullable>().ToArray();
+        Assert.NotEmpty(results);
+    }
 }
