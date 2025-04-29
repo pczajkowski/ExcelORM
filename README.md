@@ -14,6 +14,8 @@ It currently supports properties of types as supported by ClosedXML, so:
 - string
 - DateTime
 - TimeSpan
+
+Additionally, it supports:
 - Guid (if not a valid Guid and non-nullable then empty Guid will be returned)
 - enum (if not a valid enum value and non-nullable then default value will be returned)
 
