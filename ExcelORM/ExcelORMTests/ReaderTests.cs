@@ -12,6 +12,7 @@ public class ReaderTests
     private const string DifferentTypesFile = "testFiles/differentTypes.xlsx";
     private const string WithFormulaFile = "testFiles/withFormula.xlsx";
     private const string BadDate = "testFiles/badDate.xlsx";
+    private const string AdditionalTypes = "testFiles/additionalTypes.xlsx";
     
     [Fact]
     public void Read()
@@ -117,5 +118,13 @@ public class ReaderTests
         using var reader = new ExcelReader(BadDate);
         var exception = Assert.Throws<ArgumentException>(() => reader.Read<TestTypes>().ToArray());
         Assert.Contains("Location", exception.Message);
+    }
+    
+    [Fact]
+    public void ReadAdditionalTypes()
+    {
+        using var reader = new ExcelReader(AdditionalTypes);
+        var results = reader.Read<TestAdditionalTypes>().ToArray();
+        Assert.NotEmpty(results);
     }
 }
