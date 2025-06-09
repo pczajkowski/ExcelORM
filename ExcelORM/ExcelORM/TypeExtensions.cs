@@ -81,5 +81,19 @@ public static class TypeExtensions
         }
     }
 
-    public static bool Skip(this PropertyInfo property) => property.GetCustomAttributes(typeof(SkipAttribute), false).FirstOrDefault() != null;
+    public static bool SkipOnRead(this PropertyInfo property)
+    {
+        return property.GetCustomAttributes(typeof(SkipAttribute), false).FirstOrDefault() is SkipAttribute
+        {
+            SkipOnRead: true
+        };
+    }
+    
+    public static bool SkipOnWrite(this PropertyInfo property)
+    {
+        return property.GetCustomAttributes(typeof(SkipAttribute), false).FirstOrDefault() is SkipAttribute
+        {
+            SkipOnWrite: true
+        };
+    }
 }

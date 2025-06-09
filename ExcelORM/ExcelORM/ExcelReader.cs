@@ -69,7 +69,7 @@ public class ExcelReader : IDisposable
         if (firstRow.IsEmpty())
             firstRow = worksheet.RowsUsed().First(x => x.RowNumber() > startFrom && !x.IsEmpty());
 
-        var mapping = Mapping.MapProperties<T>(firstRow.CellsUsed());
+        var mapping = Mapping.MapProperties<T>(firstRow.CellsUsed(), reading: true);
         if (mapping == null) yield break;
 
         var rowsToProcess = (ObeyFilter && worksheet.AutoFilter.IsEnabled) switch

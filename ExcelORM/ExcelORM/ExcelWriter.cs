@@ -25,7 +25,7 @@ public class ExcelWriter : IDisposable
         var cellIndex = 1;
         foreach (var property in properties)
         {
-            if (property.Skip()) continue;
+            if (property.SkipOnWrite()) continue;
 
             var columnAttribute = property.GetCustomAttributes(typeof(ColumnAttribute), false).FirstOrDefault() as ColumnAttribute;
             worksheet.Cell(rowIndex, cellIndex).Value = columnAttribute is { Names.Length: > 0 } ? columnAttribute.Names.First() : property.Name;
@@ -55,7 +55,7 @@ public class ExcelWriter : IDisposable
     {
         foreach (var property in properties)
         {
-            if (property.Skip()) continue;
+            if (property.SkipOnWrite()) continue;
 
             var mapped = mapping.FirstOrDefault(x => x.PropertyName != null && x.PropertyName.Equals(property.Name));
             if (mapped?.Position == null) continue;
@@ -69,7 +69,7 @@ public class ExcelWriter : IDisposable
         var cellIndex = 0;
         foreach (var property in properties)
         {
-            if (property.Skip()) continue;
+            if (property.SkipOnWrite()) continue;
 
             cellIndex++;
 
@@ -92,7 +92,7 @@ public class ExcelWriter : IDisposable
         if (append)
         {
             var headerCells = headerRowIndex != null ? worksheet.Row((int)headerRowIndex).CellsUsed() : worksheet.FirstRowUsed()?.CellsUsed();
-            mapping = Mapping.MapProperties<T>(headerCells);
+            mapping = Mapping.MapProperties<T>(headerCells, reading: false);
             if (mapping == null || mapping.Count == 0) return;
         }
 

@@ -8,7 +8,7 @@ namespace ExcelORM
         public string? PropertyName { get; set; }
         public int? Position { get; set; }
 
-        public static List<Mapping>? MapProperties<T>(IXLCells? headerCells) where T : class
+        public static List<Mapping>? MapProperties<T>(IXLCells? headerCells, bool reading) where T : class
         {
             if (headerCells == null || !headerCells.Any()) return null;
 
@@ -16,7 +16,12 @@ namespace ExcelORM
             var properties = typeof(T).GetProperties();
             foreach (var property in properties)
             {
-                if (property.Skip()) continue;
+                switch (reading)
+                {
+                    case true when property.SkipOnRead():
+                    case false when property.SkipOnWrite():
+                        continue;
+                }
 
                 var position = property.GetCustomAttributes(typeof(ColumnAttribute), false).FirstOrDefault() switch
                 {
