@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Reflection;
 using ClosedXML.Excel;
 using ExcelORM.Attributes;
@@ -35,25 +36,26 @@ public static class TypeExtensions
         return value.GetText(); 
     }
 
-    private static object? GetSpecifiNumberType(XLCellValue value, PropertyInfo? property)
+    private static object? GetSpecificNumberType(XLCellValue value, PropertyInfo? property)
     {
-        if (property == null) return value.GetNumber();
-        
-        if (property.PropertyType == typeof(int) || property.PropertyType == typeof(int?))
-        {
-            var number = value.GetNumber();
-            if (property.PropertyType == typeof(int?) && double.IsNaN(number)) return null;
-            return Convert.ToInt32(number);
-        }
+        var rawNumber = value.GetNumber();
+        if (property == null) return rawNumber;
 
-        if (property.PropertyType == typeof(decimal) || property.PropertyType == typeof(decimal?))
+        var targetType = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
+        if (!targetType.IsPrimitive && targetType != typeof(decimal)) return rawNumber;
+
+        try
         {
-            var number = value.GetNumber();
-            if (property.PropertyType == typeof(decimal?) && double.IsNaN(number)) return null;
-            return Convert.ToDecimal(number); 
+            return Convert.ChangeType(rawNumber, targetType, CultureInfo.InvariantCulture);
         }
-        
-        return value.GetNumber();
+        catch (InvalidCastException)
+        {
+            return rawNumber;
+        }
+        catch (OverflowException exception)
+        {
+            return Nullable.GetUnderlyingType(property.PropertyType) != null ? null : throw exception;
+        }
     }
     
     // Borrowed from https://github.com/ClosedXML/ClosedXML/blob/develop/ClosedXML/Excel/XLCellValue.cs#L361
@@ -63,7 +65,7 @@ public static class TypeExtensions
         {
             XLDataType.Blank => null,
             XLDataType.Boolean => value.GetBoolean(),
-            XLDataType.Number => GetSpecifiNumberType(value, property),
+            XLDataType.Number => GetSpecificNumberType(value, property),
             XLDataType.Text => GetAdditionalTypeFromText(value, property),
             XLDataType.Error => value.GetError(),
             XLDataType.DateTime => value.GetDateTime(),
