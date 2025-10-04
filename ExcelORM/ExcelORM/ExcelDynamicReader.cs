@@ -54,7 +54,9 @@ public class ExcelDynamicReader : IDisposable
 
         var firstRow = worksheet.Row((int)startFrom);
         if (firstRow.IsEmpty())
-            firstRow = worksheet.RowsUsed().First(x => x.RowNumber() > startFrom && !x.IsEmpty());
+            firstRow = worksheet.RowsUsed().FirstOrDefault(x => x.RowNumber() > startFrom && !x.IsEmpty());
+        
+        if (firstRow == null || firstRow.IsEmpty()) yield break;
 
         var mapping = DynamicCell.MapHeader(firstRow.CellsUsed());
         if (mapping == null || mapping.Count == 0) yield break;

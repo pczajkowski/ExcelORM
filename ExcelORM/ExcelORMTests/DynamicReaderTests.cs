@@ -48,4 +48,14 @@ public class DynamicReaderTests
         Assert.NotEmpty(results);
         Assert.Equal(results.First().Count, results.Last().Count);
     }
+    
+    private const string EmptyFileForAppend = "testFiles/emptyForAppend.xlsx";
+    
+    [Fact]
+    public void ReadEmptyFile()
+    {
+        using var reader = new ExcelDynamicReader(EmptyFileForAppend);
+        var results = reader.Read().ToArray();
+        Assert.Empty(results);
+    } 
 }
