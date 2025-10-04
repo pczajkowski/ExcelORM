@@ -34,6 +34,27 @@ public static class TypeExtensions
         
         return value.GetText(); 
     }
+
+    private static object? GetSpecifiNumberType(XLCellValue value, PropertyInfo? property)
+    {
+        if (property == null) return value.GetNumber();
+        
+        if (property.PropertyType == typeof(int) || property.PropertyType == typeof(int?))
+        {
+            var number = value.GetNumber();
+            if (property.PropertyType == typeof(int?) && double.IsNaN(number)) return null;
+            return Convert.ToInt32(number);
+        }
+
+        if (property.PropertyType == typeof(decimal) || property.PropertyType == typeof(decimal?))
+        {
+            var number = value.GetNumber();
+            if (property.PropertyType == typeof(decimal?) && double.IsNaN(number)) return null;
+            return Convert.ToDecimal(number); 
+        }
+        
+        return value.GetNumber();
+    }
     
     // Borrowed from https://github.com/ClosedXML/ClosedXML/blob/develop/ClosedXML/Excel/XLCellValue.cs#L361
     public static object? ToObject(this XLCellValue value, PropertyInfo? property = null)
@@ -42,7 +63,7 @@ public static class TypeExtensions
         {
             XLDataType.Blank => null,
             XLDataType.Boolean => value.GetBoolean(),
-            XLDataType.Number => value.GetNumber(),
+            XLDataType.Number => GetSpecifiNumberType(value, property),
             XLDataType.Text => GetAdditionalTypeFromText(value, property),
             XLDataType.Error => value.GetError(),
             XLDataType.DateTime => value.GetDateTime(),

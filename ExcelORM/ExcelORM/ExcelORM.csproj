@@ -4,7 +4,7 @@
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <Version>2.7.0</Version>
+        <Version>2.8.0</Version>
         <PackageProjectUrl>https://git.liox.eu/pczajkowski/ExcelORM</PackageProjectUrl>
         <RepositoryUrl>https://github.com/pczajkowski/ExcelORM</RepositoryUrl>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
@@ -14,11 +14,11 @@
 	<Authors>Piotr Czajkowski</Authors>
 	<Description>Simple library to read/write C# objects from/to Excel files. </Description>
 	<RepositoryType>GitHub</RepositoryType>
-	<PackageReleaseNotes>Able to read enums and Guids.</PackageReleaseNotes>
+	<PackageReleaseNotes>Handling more number types.</PackageReleaseNotes>
     </PropertyGroup>
 
     <ItemGroup>
-	    <PackageReference Include="ClosedXML" Version="0.104.2" />
+	    <PackageReference Include="ClosedXML" Version="0.105.0" />
 	    <None Include="../../README.md" Pack="true" PackagePath="\" />
 	    <None Include="../../LICENSE" Pack="true" PackagePath="" />
     </ItemGroup>
