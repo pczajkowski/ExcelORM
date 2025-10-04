@@ -54,7 +54,8 @@ public static class TypeExtensions
         }
         catch (OverflowException exception)
         {
-            return Nullable.GetUnderlyingType(property.PropertyType) != null ? null : throw exception;
+            if (Nullable.GetUnderlyingType(property.PropertyType) != null) return null;
+            throw;
         }
     }
     

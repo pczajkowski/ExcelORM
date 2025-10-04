@@ -37,8 +37,6 @@ public class ExcelDynamicWriter : IDisposable
             false => GenerateHeader(worksheet, values.First()),
         };
 
-        if (rowIndex == null) throw new NullReferenceException(nameof(rowIndex));
-
         foreach (var row in values)
         {
             foreach (var cell in row)
