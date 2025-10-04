@@ -45,9 +45,9 @@ public class DynamicWriterTests
         writer.Write(results);
         writer.SaveAs(testFile);
         
-        using var writerAppend = new ExcelDynamicWriter();
-        writer.Write(results, append: true);
-        writer.SaveAs(testFile);
+        using var writerAppend = new ExcelDynamicWriter(testFile);
+        writerAppend.Write(results, append: true);
+        writerAppend.SaveAs(testFile);
 
         using var savedReader = new ExcelDynamicReader(testFile);
         var savedResults = savedReader.Read().ToArray();
@@ -55,6 +55,32 @@ public class DynamicWriterTests
         Assert.True(results.First().SequenceEqual(savedResults.First()));
         Assert.True(results.Last().SequenceEqual(savedResults.Last()));
         Assert.Equal(results.Length * 2, savedResults.Length);
+
+        File.Delete(testFile);
+    }
+    
+    private const string EmptyFileForAppend = "testFiles/emptyForAppend.xlsx";
+    
+    [Fact]
+    public void WriteWithAppendEmptyFile()
+    {
+        var testFile = Path.GetRandomFileName();
+        testFile = Path.ChangeExtension(testFile, "xlsx");
+        File.Copy(EmptyFileForAppend, testFile);
+
+        using var reader = new ExcelDynamicReader(DifficultFile);
+        var results = reader.Read().ToArray();
+        Assert.NotEmpty(results);
+
+        using var writerAppend = new ExcelDynamicWriter(testFile);
+        writerAppend.Write(results, append: true);
+        writerAppend.SaveAs(testFile);
+
+        using var savedReader = new ExcelDynamicReader(testFile);
+        var savedResults = savedReader.Read().ToArray();
+        Assert.NotEmpty(savedResults);
+        Assert.True(results.First().SequenceEqual(savedResults.First()));
+        Assert.True(results.Last().SequenceEqual(savedResults.Last()));
 
         File.Delete(testFile);
     }
