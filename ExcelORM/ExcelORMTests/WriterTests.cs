@@ -136,6 +136,28 @@ public class WriterTests
 
         File.Delete(testFile);
     }
+    
+    private const string EmptyFileForAppend = "testFiles/emptyForAppend.xlsx";
+    [Fact]
+    public void WriteWithAppendEmpty()
+    {
+        var testFile = Path.GetRandomFileName();
+        testFile = Path.ChangeExtension(testFile, "xlsx");
+        File.Copy(EmptyFileForAppend, testFile);
+
+        using var writer = new ExcelWriter(testFile);
+        writer.Write(ArrayOfThree, append: true);
+        writer.SaveAs(testFile);
+
+        using var reader = new ExcelReader(testFile);
+        var readArray = reader.Read<Test>().ToArray();
+        Assert.Equal(3, readArray.Length);
+
+        for (int i = 0; i < ArrayOfThree.Length; i++)
+            Assert.Equal(ArrayOfThree[i], readArray[i]);
+        
+        File.Delete(testFile);
+    }
 
     [Fact]
     public void WriteDifferentTypes()

@@ -82,10 +82,13 @@ public class ExcelWriter : IDisposable
         var properties = typeof(T).GetProperties();
         List<Mapping>? mapping = [];
 
+        var lastRow = worksheet.LastRowUsed();
+        if (lastRow == null && append) append = false;
+        
         var rowIndex = (append, startFrom: appendFrom) switch
         { 
             (true, not null) => (int)appendFrom,
-            (true, null) => worksheet.LastRowUsed()?.RowNumber() + 1,
+            (true, null) => lastRow.RowNumber() + 1,
             _ => GenerateHeader(worksheet, properties) 
         };
 
@@ -96,12 +99,10 @@ public class ExcelWriter : IDisposable
             if (mapping == null || mapping.Count == 0) return;
         }
 
-        if (rowIndex == null) throw new NullReferenceException(nameof(rowIndex));
-
         foreach (var value in values)
         {
-            if (append) WriteRowAppend(value, worksheet, properties, rowIndex.Value, mapping);
-            else WriteRow(value, worksheet, properties, rowIndex.Value);
+            if (append) WriteRowAppend(value, worksheet, properties, rowIndex, mapping);
+            else WriteRow(value, worksheet, properties, rowIndex);
             
             rowIndex++;
         }
