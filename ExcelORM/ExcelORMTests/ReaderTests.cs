@@ -135,4 +135,14 @@ public class ReaderTests
         var results = reader.Read<TestAdditionalTypesNullable>().ToArray();
         Assert.NotEmpty(results);
     }
+    
+    private const string EmptyFileForAppend = "testFiles/emptyForAppend.xlsx";
+    
+    [Fact]
+    public void ReadEmptyFile()
+    {
+        using var reader = new ExcelReader(EmptyFileForAppend);
+        var results = reader.Read<Test>().ToArray();
+        Assert.Empty(results);
+    }
 }

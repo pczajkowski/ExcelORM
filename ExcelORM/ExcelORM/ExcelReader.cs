@@ -67,7 +67,9 @@ public class ExcelReader : IDisposable
 
         var firstRow = worksheet.Row((int)startFrom);
         if (firstRow.IsEmpty())
-            firstRow = worksheet.RowsUsed().First(x => x.RowNumber() > startFrom && !x.IsEmpty());
+            firstRow = worksheet.RowsUsed().FirstOrDefault(x => x.RowNumber() > startFrom && !x.IsEmpty());
+        
+        if (firstRow == null || firstRow.IsEmpty()) yield break;
 
         var mapping = Mapping.MapProperties<T>(firstRow.CellsUsed());
         if (mapping == null) yield break;
