@@ -52,7 +52,7 @@ public static class TypeExtensions
         {
             return rawNumber;
         }
-        catch (OverflowException exception)
+        catch (OverflowException)
         {
             if (Nullable.GetUnderlyingType(property.PropertyType) != null) return null;
             throw;
