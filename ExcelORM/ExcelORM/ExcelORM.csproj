@@ -14,7 +14,7 @@
 	<Authors>Piotr Czajkowski</Authors>
 	<Description>Simple library to read/write C# objects from/to Excel files. </Description>
 	<RepositoryType>GitHub</RepositoryType>
-	<PackageReleaseNotes>Handling more number types.</PackageReleaseNotes>
+	<PackageReleaseNotes>Handling more number types. Properly handling appending to and reading from empty file.</PackageReleaseNotes>
     </PropertyGroup>
 
     <ItemGroup>

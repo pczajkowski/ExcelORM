@@ -15,6 +15,8 @@ It currently supports properties of types as supported by ClosedXML, so:
 - DateTime
 - TimeSpan
 
+From version 2.8.0 it supports additional numeric types: decimal, float, long, int, short, byte and their nullable variants.
+
 Additionally, it supports:
 - Guid (if not a valid Guid and non-nullable then empty Guid will be returned)
 - enum (if not a valid enum value and non-nullable then default value will be returned)
