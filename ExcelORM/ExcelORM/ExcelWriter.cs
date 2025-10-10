@@ -83,7 +83,11 @@ public class ExcelWriter : IDisposable
         List<Mapping>? mapping = [];
 
         var lastRow = worksheet.LastRowUsed();
-        if (lastRow == null) append = false;
+        if (lastRow == null)
+        {
+            append = false;
+            lastRow = worksheet.FirstRow();
+        }
         
         var rowIndex = (append, startFrom) switch
         { 
