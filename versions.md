@@ -8,4 +8,5 @@
 | 2.5.0 | Added Location to ArgumentException Message in ExcelReader. It'll show address of affected cell and the worksheet's name.|
 | 2.6.0 | Added support for appending starting from given row.|
 | 2.7.0 | Added support for reading properties of type Guid and enum.|
-| 2.8.0 | Handling more number types. Properly handling appending to and reading from empty file.
+| 2.8.0 | Handling more number types. Properly handling appending to and reading from empty file.|
+| 2.8.1 | Ability to start writing from given row.|
