@@ -101,7 +101,7 @@ public class WriterTests
 
         uint headerRowIndex = 3;
         using var writer = new ExcelWriter(testFile);
-        writer.Write(ArrayOfThree, append: true, headerRowIndex: headerRowIndex, appendFrom: 7);
+        writer.Write(ArrayOfThree, append: true, headerRowIndex: headerRowIndex, startFrom: 7);
         writer.SaveAs(testFile);
 
         using var reader = new ExcelReader(testFile);
@@ -361,5 +361,24 @@ public class WriterTests
 
         for (int i = 0; i < readArray.Length; i++)
             Assert.Equal(ArrayOfThree[i], readArray[i]);
+    }
+    
+    [Fact]
+    public void WriteWithStartFrom()
+    {
+        var testFile = Path.GetRandomFileName();
+        testFile = Path.ChangeExtension(testFile, "xlsx");
+
+        const string worksheetName = "Test";
+        using var writer = new ExcelWriter(testFile);
+        writer.Write(ArrayOfThree, worksheetName);
+        writer.Write(ListOfTwo, worksheetName, startFrom: (uint)(ArrayOfThree.Length + 3));
+        writer.SaveAs(testFile);
+
+        using var reader = new ExcelReader(testFile);
+        var readArray = reader.Read<Test>(worksheetName).ToArray();
+        Assert.Equal(6, readArray.Length);
+        
+        File.Delete(testFile);
     }
 }

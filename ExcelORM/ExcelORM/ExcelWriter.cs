@@ -19,9 +19,9 @@ public class ExcelWriter : IDisposable
         xlWorkbook = workbook ?? throw new ArgumentNullException(nameof(workbook));
     }
 
-    private static int GenerateHeader(IXLWorksheet worksheet, PropertyInfo[] properties)
+    private static int GenerateHeader(IXLWorksheet worksheet, PropertyInfo[] properties, uint? startFrom = null)
     {
-        var rowIndex = 1;
+        var rowIndex = startFrom == null ? 1 : (int)startFrom.Value;
         var cellIndex = 1;
         foreach (var property in properties)
         {
@@ -77,7 +77,7 @@ public class ExcelWriter : IDisposable
         }
     }
 
-    private static void Write<T>(IEnumerable<T> values, IXLWorksheet worksheet, bool append, uint? headerRowIndex = null, uint? appendFrom = null) where T : class
+    private static void Write<T>(IEnumerable<T> values, IXLWorksheet worksheet, bool append, uint? headerRowIndex = null, uint? startFrom = null) where T : class
     {
         var properties = typeof(T).GetProperties();
         List<Mapping>? mapping = [];
@@ -85,11 +85,11 @@ public class ExcelWriter : IDisposable
         var lastRow = worksheet.LastRowUsed();
         if (lastRow == null) append = false;
         
-        var rowIndex = (append, startFrom: appendFrom) switch
+        var rowIndex = (append, startFrom) switch
         { 
-            (true, not null) => (int)appendFrom,
+            (true, not null) => (int)startFrom,
             (true, null) => lastRow.RowNumber() + 1,
-            _ => GenerateHeader(worksheet, properties) 
+            _ => GenerateHeader(worksheet, properties, startFrom) 
         };
 
         if (append)
@@ -108,7 +108,7 @@ public class ExcelWriter : IDisposable
         }
     }
 
-    public void Write<T>(IEnumerable<T> values, string? worksheetName = null, bool append = false, uint? headerRowIndex = null, uint? appendFrom = null) where T : class
+    public void Write<T>(IEnumerable<T> values, string? worksheetName = null, bool append = false, uint? headerRowIndex = null, uint? startFrom = null) where T : class
     {
         var xlWorksheet = xlWorkbook.Worksheets.FirstOrDefault(x => x.Name.Equals(worksheetName, StringComparison.InvariantCultureIgnoreCase));
         
@@ -116,7 +116,7 @@ public class ExcelWriter : IDisposable
             xlWorkbook.AddWorksheet(worksheetName)
             : xlWorkbook.Worksheets.Count == 0 ? xlWorkbook.AddWorksheet() : xlWorkbook.Worksheets.First();
 
-        Write(values, xlWorksheet, append, headerRowIndex, appendFrom);
+        Write(values, xlWorksheet, append, headerRowIndex, startFrom);
     }
 
     public void SaveAs(string path, IExcelConverter? converter = null)
