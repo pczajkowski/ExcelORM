@@ -7,18 +7,21 @@ namespace ExcelORM;
 
 public static class TypeExtensions
 {
+    private static object? HandleGuid(XLCellValue value, PropertyInfo property)
+    {
+        if (Guid.TryParse(value.GetText(), out var guid))
+            return guid;
+
+        if (property.PropertyType == typeof(Guid?)) return null;
+        return Guid.Empty; 
+    }
+    
     private static object? GetAdditionalTypeFromText(XLCellValue value, PropertyInfo? property = null)
     {
         if (property == null) return value.GetText();
         
         if (property.PropertyType == typeof(Guid) || property.PropertyType == typeof(Guid?))
-        {
-            if (Guid.TryParse(value.GetText(), out var guid))
-                return guid;
-
-            if (property.PropertyType == typeof(Guid?)) return null;
-            return Guid.Empty;
-        }
+            return HandleGuid(value, property);
 
         if (property.PropertyType.IsEnum)
         {
