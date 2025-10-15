@@ -15,6 +15,18 @@ public static class TypeExtensions
         if (property.PropertyType == typeof(Guid?)) return null;
         return Guid.Empty; 
     }
+
+    private static object? HandleEnum(XLCellValue value, PropertyInfo property, Type? nullableUnderlyingType)
+    {
+        if (nullableUnderlyingType != null)
+        {
+            return Enum.TryParse(nullableUnderlyingType, value.GetText(), true, out var enumNullableValue)
+                ? enumNullableValue : null;
+        }
+        
+        return Enum.TryParse(property.PropertyType, value.GetText(), true, out var enumValue)
+            ? enumValue : Enum.GetValues(property.PropertyType).GetValue(0);
+    } 
     
     private static object? GetAdditionalTypeFromText(XLCellValue value, PropertyInfo? property = null)
     {
@@ -23,18 +35,9 @@ public static class TypeExtensions
         if (property.PropertyType == typeof(Guid) || property.PropertyType == typeof(Guid?))
             return HandleGuid(value, property);
 
-        if (property.PropertyType.IsEnum)
-        {
-            return Enum.TryParse(property.PropertyType, value.GetText(), true, out var enumValue)
-                ? enumValue : Enum.GetValues(property.PropertyType).GetValue(0);
-        }
-
         var nullableUnderlyingType = Nullable.GetUnderlyingType(property.PropertyType);
-        if (nullableUnderlyingType is { IsEnum: true })
-        {
-            return Enum.TryParse(nullableUnderlyingType, value.GetText(), true, out var enumValue)
-                ? enumValue : null;
-        }
+        if (property.PropertyType.IsEnum || (nullableUnderlyingType is { IsEnum: true }))
+            return HandleEnum(value, property, nullableUnderlyingType);
         
         return value.GetText(); 
     }
