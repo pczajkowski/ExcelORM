@@ -4,7 +4,7 @@
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <Version>2.8.1</Version>
+        <Version>2.9.0</Version>
         <PackageProjectUrl>https://git.liox.eu/pczajkowski/ExcelORM</PackageProjectUrl>
         <RepositoryUrl>https://github.com/pczajkowski/ExcelORM</RepositoryUrl>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
@@ -14,7 +14,8 @@
 	<Authors>Piotr Czajkowski</Authors>
 	<Description>Simple library to read/write C# objects from/to Excel files. </Description>
 	<RepositoryType>GitHub</RepositoryType>
-	<PackageReleaseNotes>Ability to start writing from given row.</PackageReleaseNotes>
+	<PackageReleaseNotes>Ability to start writing from given row.
+Trying to handle dates saved as text without throwing.</PackageReleaseNotes>
     </PropertyGroup>
 
     <ItemGroup>

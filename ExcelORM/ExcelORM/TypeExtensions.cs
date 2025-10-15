@@ -38,6 +38,9 @@ public static class TypeExtensions
         if (property.PropertyType == typeof(DateTime) || property.PropertyType == typeof(DateTime?))
             return DateTime.TryParse(value.GetText(), out var dateTime) ? dateTime : default;
 
+        if (property.PropertyType == typeof(DateOnly) || property.PropertyType == typeof(DateOnly?))
+            return DateOnly.TryParse(value.GetText(), out var dateOnly) ? dateOnly : default;
+
         var nullableUnderlyingType = Nullable.GetUnderlyingType(property.PropertyType);
         if (property.PropertyType.IsEnum || (nullableUnderlyingType is { IsEnum: true }))
             return HandleEnum(value, property, nullableUnderlyingType);
