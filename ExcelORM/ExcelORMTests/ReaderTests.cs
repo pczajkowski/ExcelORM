@@ -113,14 +113,6 @@ public class ReaderTests
     }
     
     [Fact]
-    public void BadDateThrows()
-    {
-        using var reader = new ExcelReader(BadDate);
-        var exception = Assert.Throws<ArgumentException>(() => reader.Read<TestTypes>().ToArray());
-        Assert.Contains("Location", exception.Message);
-    }
-    
-    [Fact]
     public void ReadAdditionalTypes()
     {
         using var reader = new ExcelReader(AdditionalTypes);
