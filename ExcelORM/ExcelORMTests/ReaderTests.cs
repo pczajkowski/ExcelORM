@@ -11,7 +11,6 @@ public class ReaderTests
     private const string MultipleSheetsFile = "testFiles/multipleSheets.xlsx";
     private const string DifferentTypesFile = "testFiles/differentTypes.xlsx";
     private const string WithFormulaFile = "testFiles/withFormula.xlsx";
-    private const string BadDate = "testFiles/badDate.xlsx";
     private const string AdditionalTypes = "testFiles/additionalTypes.xlsx";
     
     [Fact]
