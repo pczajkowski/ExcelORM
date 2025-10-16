@@ -41,4 +41,17 @@ public class TypeExtensionsTests
         Assert.IsType<Guid>(readValue);
         Assert.NotEqual(Guid.Empty, readValue);
     }
+     
+    public TestEnum? EnumProperty { get; set; }
+    
+    [Fact]
+    public void ToObject_EnumAsString()
+    {
+        XLCellValue value = "Second";
+        
+        var propertyInfo = typeof(TypeExtensionsTests).GetProperty("EnumProperty");
+        var readValue = value.ToObject(propertyInfo);
+        Assert.IsType<TestEnum>(readValue);
+        Assert.NotEqual(TestEnum.First, readValue);
+    }
 }
