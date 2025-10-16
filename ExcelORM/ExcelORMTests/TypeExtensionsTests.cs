@@ -28,4 +28,17 @@ public class TypeExtensionsTests
         var readValue = value.ToObject(propertyInfo);
         Assert.IsType<DateOnly>(readValue);
     }
+     
+    public Guid? GuidProperty { get; set; }
+    
+    [Fact]
+    public void ToObject_GuidAsString()
+    {
+        XLCellValue value = "00000000-0000-0000-0000-000000000001";
+        
+        var propertyInfo = typeof(TypeExtensionsTests).GetProperty("GuidProperty");
+        var readValue = value.ToObject(propertyInfo);
+        Assert.IsType<Guid>(readValue);
+        Assert.NotEqual(Guid.Empty, readValue);
+    }
 }
