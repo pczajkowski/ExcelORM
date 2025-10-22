@@ -31,15 +31,19 @@ public static class TypeExtensions
     private static object? GetAdditionalTypeFromText(XLCellValue value, PropertyInfo? property = null)
     {
         if (property == null) return value.GetText();
-        
-        if (property.PropertyType == typeof(Guid) || property.PropertyType == typeof(Guid?))
-            return HandleGuid(value, property);
 
-        if (property.PropertyType == typeof(DateTime) || property.PropertyType == typeof(DateTime?))
-            return DateTime.TryParse(value.GetText(), out var dateTime) ? dateTime : default;
-
-        if (property.PropertyType == typeof(DateOnly) || property.PropertyType == typeof(DateOnly?))
-            return DateOnly.TryParse(value.GetText(), out var dateOnly) ? dateOnly : default;
+        switch (property.PropertyType)
+        {
+            case var _ when property.PropertyType == typeof(Guid):
+            case var _ when property.PropertyType == typeof(Guid?):
+                return HandleGuid(value, property);
+            case var _ when property.PropertyType == typeof(DateTime):
+            case var _ when property.PropertyType == typeof(DateTime?):
+                return DateTime.TryParse(value.GetText(), out var dateTime) ? dateTime : default;
+            case var _ when property.PropertyType == typeof(DateOnly):
+            case var _ when property.PropertyType == typeof(DateOnly?):
+                return DateOnly.TryParse(value.GetText(), out var dateOnly) ? dateOnly : default;
+        }
 
         var nullableUnderlyingType = Nullable.GetUnderlyingType(property.PropertyType);
         if (property.PropertyType.IsEnum || (nullableUnderlyingType is { IsEnum: true }))
