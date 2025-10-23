@@ -32,19 +32,20 @@ public static class TypeExtensions
     {
         if (property == null) return value.GetText();
 
-        switch (property.PropertyType)
+        var pt = property.PropertyType;
+        switch (pt)
         {
-            case var guid when guid == typeof(Guid):
-            case var guidNull when guidNull == typeof(Guid?):
+            case var _ when pt == typeof(Guid):
+            case var _ when pt == typeof(Guid?):
                 return HandleGuid(value, property);
-            case var dateTime when dateTime == typeof(DateTime):
-            case var dateTimeNull when dateTimeNull == typeof(DateTime?):
+            case var _ when pt == typeof(DateTime):
+            case var _ when pt == typeof(DateTime?):
                 return DateTime.TryParse(value.GetText(), out var dateValue) ? dateValue : default;
-            case var dateOnly when dateOnly == typeof(DateOnly):
-            case var dateOnlyNull when dateOnlyNull == typeof(DateOnly?):
+            case var _ when pt == typeof(DateOnly):
+            case var _ when pt == typeof(DateOnly?):
                 return DateOnly.TryParse(value.GetText(), out var dateOnlyValue) ? dateOnlyValue : default;
             case { IsEnum: true }:
-            case var enumNull when Nullable.GetUnderlyingType(enumNull) is { IsEnum: true }:
+            case var _ when Nullable.GetUnderlyingType(pt) is { IsEnum: true }:
                 return HandleEnum(value, property, Nullable.GetUnderlyingType(property.PropertyType));
         }
         
