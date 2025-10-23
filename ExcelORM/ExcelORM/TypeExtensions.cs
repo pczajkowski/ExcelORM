@@ -34,20 +34,19 @@ public static class TypeExtensions
 
         switch (property.PropertyType)
         {
-            case var _ when property.PropertyType == typeof(Guid):
-            case var _ when property.PropertyType == typeof(Guid?):
+            case var guid when guid == typeof(Guid):
+            case var guidNull when guidNull == typeof(Guid?):
                 return HandleGuid(value, property);
-            case var _ when property.PropertyType == typeof(DateTime):
-            case var _ when property.PropertyType == typeof(DateTime?):
-                return DateTime.TryParse(value.GetText(), out var dateTime) ? dateTime : default;
-            case var _ when property.PropertyType == typeof(DateOnly):
-            case var _ when property.PropertyType == typeof(DateOnly?):
-                return DateOnly.TryParse(value.GetText(), out var dateOnly) ? dateOnly : default;
+            case var dateTime when dateTime == typeof(DateTime):
+            case var dateTimeNull when dateTimeNull == typeof(DateTime?):
+                return DateTime.TryParse(value.GetText(), out var dateValue) ? dateValue : default;
+            case var dateOnly when dateOnly == typeof(DateOnly):
+            case var dateOnlyNull when dateOnlyNull == typeof(DateOnly?):
+                return DateOnly.TryParse(value.GetText(), out var dateOnlyValue) ? dateOnlyValue : default;
+            case { IsEnum: true }:
+            case var enumNull when Nullable.GetUnderlyingType(enumNull) is { IsEnum: true }:
+                return HandleEnum(value, property, Nullable.GetUnderlyingType(property.PropertyType));
         }
-
-        var nullableUnderlyingType = Nullable.GetUnderlyingType(property.PropertyType);
-        if (property.PropertyType.IsEnum || (nullableUnderlyingType is { IsEnum: true }))
-            return HandleEnum(value, property, nullableUnderlyingType);
         
         return value.GetText(); 
     }
