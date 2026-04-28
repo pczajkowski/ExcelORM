@@ -90,20 +90,6 @@ public static class TypeExtensions
         };
     }
 
-    public static Type ValueType(this XLCellValue value)
-    {
-        return value.Type switch
-        {
-            XLDataType.Blank => typeof(string),
-            XLDataType.Boolean => typeof(bool),
-            XLDataType.Number => typeof(double?),
-            XLDataType.Text => typeof(string),
-            XLDataType.DateTime => typeof(DateTime?),
-            XLDataType.TimeSpan => typeof(TimeSpan?),
-            _ => throw new InvalidCastException()
-        };
-    }
-
     public static void SetPropertyValue<T>(this T currentObject, PropertyInfo property, XLCellValue value)
     {
         var valueToSet = value.ToObject(property);
