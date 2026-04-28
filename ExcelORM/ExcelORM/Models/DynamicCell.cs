@@ -7,7 +7,17 @@ namespace ExcelORM.Models
         public int Position { get; set; }
         public string? Header { get; set; }
         public Type? Type { get; set; }
-        public object? Value { get; set; }
+
+        private object? value;
+        public object? Value
+        {
+            get => value;
+            set
+            {
+                this.value = value;
+                Type = value?.GetType();
+            }
+        }
 
         public static List<DynamicCell>? MapHeader(IXLCells? headerCells)
         {

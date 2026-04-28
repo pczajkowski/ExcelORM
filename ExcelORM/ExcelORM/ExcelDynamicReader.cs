@@ -35,7 +35,6 @@ public class ExcelDynamicReader : IDisposable
                     continue;
                 }
 
-                item.Type ??= cell.Value.ValueType();
                 var cellItem = item with
                 {
                     Value = cell.Value.ToObject()

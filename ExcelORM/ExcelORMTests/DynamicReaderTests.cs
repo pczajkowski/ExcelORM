@@ -26,10 +26,10 @@ public class DynamicReaderTests
 
         var first = results.First();
         Assert.Equal(typeof(string), first[0].Type);
-        Assert.Equal(typeof(DateTime?), first[1].Type);
-        Assert.Equal(typeof(TimeSpan?), first[2].Type);
-        Assert.Equal(typeof(double?), first[3].Type);
-        Assert.Equal(typeof(double?), first[4].Type);
+        Assert.Equal(typeof(DateTime), first[1].Type);
+        Assert.Equal(typeof(TimeSpan), first[2].Type);
+        Assert.Equal(typeof(double), first[3].Type);
+        Assert.Equal(typeof(double), first[4].Type);
     }
 
     [Fact]
