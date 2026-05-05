@@ -29,15 +29,20 @@ public class ExcelDynamicWriter : IDisposable
     private static void Write(IEnumerable<List<DynamicCell>> values, IXLWorksheet worksheet, bool append)
     {
         var lastRow = worksheet.LastRowUsed();
-        if (lastRow == null) append = false;
-        
+        if (lastRow == null)
+        {
+            append = false;
+            lastRow = worksheet.FirstRow();
+        }
+
+        var valuesList = values.ToList();
         var rowIndex = append switch
         {
             true => lastRow.RowNumber() + 1,
-            false => GenerateHeader(worksheet, values.First()),
+            false => GenerateHeader(worksheet, valuesList.First()),
         };
 
-        foreach (var row in values)
+        foreach (var row in valuesList)
         {
             foreach (var cell in row)
             {
