@@ -14,7 +14,7 @@ public sealed class ExcelDynamicReader : IDisposable
         xlWorkbook = new XLWorkbook(path);
     }
 
-    public ExcelDynamicReader(IXLWorkbook workbook)
+    public ExcelDynamicReader(IXLWorkbook? workbook)
     {
         xlWorkbook = workbook ?? throw new ArgumentNullException(nameof(workbook));
     }

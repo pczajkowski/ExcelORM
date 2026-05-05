@@ -12,7 +12,7 @@ public class ExcelDynamicWriter : IDisposable
         xlWorkbook = File.Exists(path) ? new XLWorkbook(path) : new XLWorkbook();
     }
 
-    public ExcelDynamicWriter(IXLWorkbook workbook)
+    public ExcelDynamicWriter(IXLWorkbook? workbook)
     {
         xlWorkbook = workbook ?? throw new ArgumentNullException(nameof(workbook));
     }

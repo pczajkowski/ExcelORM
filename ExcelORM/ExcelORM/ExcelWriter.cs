@@ -14,7 +14,7 @@ public class ExcelWriter : IDisposable
         xlWorkbook = File.Exists(path) ? new XLWorkbook(path) : new XLWorkbook();
     }
 
-    public ExcelWriter(IXLWorkbook workbook)
+    public ExcelWriter(IXLWorkbook? workbook)
     {
         xlWorkbook = workbook ?? throw new ArgumentNullException(nameof(workbook));
     }
