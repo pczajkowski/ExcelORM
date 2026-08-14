@@ -4,7 +4,7 @@ using ExcelORM.Models;
 
 namespace ExcelORM;
 
-public class ExcelReader : IDisposable
+public sealed class ExcelReader : IDisposable
 {
     private readonly IXLWorkbook xlWorkbook;
     public bool SkipHidden { get; set; }
@@ -117,16 +117,6 @@ public class ExcelReader : IDisposable
 
     public void Dispose()
     {
-        Dispose(true);
-        GC.SuppressFinalize(this);
+        xlWorkbook.Dispose();
     }
-
-    protected virtual void Dispose(bool disposing)
-    {
-        if (disposing)
-        {
-            xlWorkbook.Dispose();
-        }
-    }
-    ~ExcelReader() => Dispose(false);
 }

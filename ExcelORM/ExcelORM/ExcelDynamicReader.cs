@@ -108,16 +108,6 @@ public sealed class ExcelDynamicReader : IDisposable
 
     public void Dispose()
     {
-        Dispose(true);
-        GC.SuppressFinalize(this);
+        xlWorkbook.Dispose();
     }
-
-    private void Dispose(bool disposing)
-    {
-        if (disposing)
-        {
-            xlWorkbook.Dispose();
-        }
-    }
-    ~ExcelDynamicReader() => Dispose(false);
 }
