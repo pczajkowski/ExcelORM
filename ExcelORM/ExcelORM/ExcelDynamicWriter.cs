@@ -28,6 +28,9 @@ public class ExcelDynamicWriter : IDisposable
 
     private static void Write(IEnumerable<List<DynamicCell>> values, IXLWorksheet worksheet, bool append)
     {
+        var valuesList = values.ToList();
+        if (valuesList.Count == 0) return;
+        
         var lastRow = worksheet.LastRowUsed();
         if (lastRow == null)
         {
@@ -35,7 +38,6 @@ public class ExcelDynamicWriter : IDisposable
             lastRow = worksheet.FirstRow();
         }
 
-        var valuesList = values.ToList();
         var rowIndex = append switch
         {
             true => lastRow.RowNumber() + 1,
