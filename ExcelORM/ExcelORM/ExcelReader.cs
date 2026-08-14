@@ -101,7 +101,7 @@ public sealed class ExcelReader : IDisposable
 
     public IEnumerable<T> Read<T>(int worksheetIndex = 1, uint startFrom = 1, uint skip = 0) where T : class
     {
-        if (worksheetIndex > xlWorkbook.Worksheets.Count) yield break;
+        if (worksheetIndex < 1 || worksheetIndex > xlWorkbook.Worksheets.Count) yield break;
 
         var worksheet = xlWorkbook.Worksheets.FirstOrDefault(x => x.Position == worksheetIndex);
         if (worksheet == null) yield break;
