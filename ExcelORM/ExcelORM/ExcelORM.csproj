@@ -14,7 +14,7 @@
 	<Authors>Piotr Czajkowski</Authors>
 	<Description>Simple library to read/write C# objects from/to Excel files. </Description>
 	<RepositoryType>GitHub</RepositoryType>
-	<PackageReleaseNotes>Few cosmetic changes.</PackageReleaseNotes>
+	<PackageReleaseNotes>Few cosmetic changes and updated to ClosedXML 0.105.1.</PackageReleaseNotes>
     </PropertyGroup>
 
     <ItemGroup>
