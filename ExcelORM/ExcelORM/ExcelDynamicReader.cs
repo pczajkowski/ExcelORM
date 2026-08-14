@@ -31,7 +31,7 @@ public sealed class ExcelDynamicReader : IDisposable
                 var cell = row.Cell(item.Position);
                 if (cell == null || cell.Value.IsBlank)
                 {
-                    dynamicRow.Add(item);
+                    dynamicRow.Add(item with { Value = null });
                     continue;
                 }
 

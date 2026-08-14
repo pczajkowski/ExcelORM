@@ -4,7 +4,7 @@
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <Version>3.0.1</Version>
+        <Version>3.0.2</Version>
         <PackageProjectUrl>https://git.liox.eu/pczajkowski/ExcelORM</PackageProjectUrl>
         <RepositoryUrl>https://github.com/pczajkowski/ExcelORM</RepositoryUrl>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
@@ -14,7 +14,7 @@
 	<Authors>Piotr Czajkowski</Authors>
 	<Description>Simple library to read/write C# objects from/to Excel files. </Description>
 	<RepositoryType>GitHub</RepositoryType>
-	<PackageReleaseNotes>Few cosmetic changes and updated to ClosedXML 0.105.1.</PackageReleaseNotes>
+	<PackageReleaseNotes>Few small improvements.</PackageReleaseNotes>
     </PropertyGroup>
 
     <ItemGroup>
