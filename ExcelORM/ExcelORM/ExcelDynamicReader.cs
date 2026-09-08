@@ -65,7 +65,7 @@ public sealed class ExcelDynamicReader : IDisposable
             true => worksheet.AutoFilter.VisibleRows
                 .Where(x => x.RowNumber() > firstRow.RowNumber())
                 .Select(x => x.WorksheetRow()),
-            false => worksheet.RowsUsed().Where(x => x.RowNumber() > firstRow.RowNumber())
+            false => worksheet.RowsUsed(x => x.RowNumber() > firstRow.RowNumber())
 
         };
 
