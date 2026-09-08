@@ -53,7 +53,7 @@ public sealed class ExcelDynamicReader : IDisposable
 
         var firstRow = worksheet.Row((int)startFrom);
         if (firstRow.IsEmpty())
-            firstRow = worksheet.RowsUsed().FirstOrDefault(x => x.RowNumber() > startFrom && !x.IsEmpty());
+            firstRow = worksheet.RowsUsed(x => x.RowNumber() > startFrom && !x.IsEmpty()).FirstOrDefault();
         
         if (firstRow == null || firstRow.IsEmpty()) yield break;
 
