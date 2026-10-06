@@ -136,4 +136,15 @@ public class ReaderTests
         var results = reader.Read<Test>().ToArray();
         Assert.Empty(results);
     }
+    
+    [Fact]
+    public void ReadData()
+    {
+        var results = ExcelReader.ReadData<Test>(RegularFile).ToArray();
+        Assert.NotEmpty(results);
+        
+        var resultsWorkbook = ExcelReader.ReadData<Test>(new XLWorkbook(RegularFile)).ToArray();
+        Assert.NotEmpty(resultsWorkbook);
+        Assert.Equal(results, resultsWorkbook);
+    }
 }

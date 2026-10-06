@@ -114,6 +114,23 @@ public sealed class ExcelReader : IDisposable
     {
         return xlWorkbook.Worksheets.SelectMany(worksheet => Read<T>(worksheet, startFrom, skip));
     }
+    
+    public static IEnumerable<T> ReadData<T>(string? path, string? worksheetName = null, uint startFrom = 1, uint skip = 0) where T : class
+    {
+        var workbook = new XLWorkbook(path);
+        var worksheet = string.IsNullOrWhiteSpace(worksheetName) ? workbook.Worksheets.FirstOrDefault()
+            : workbook.Worksheets.FirstOrDefault(x => x.Name.Equals(worksheetName, StringComparison.InvariantCultureIgnoreCase));
+        
+        return worksheet == null ? [] : ReadData<T>(workbook, worksheet.Position, startFrom, skip);
+    }
+    
+    public static IEnumerable<T> ReadData<T>(IXLWorkbook? workbook, int worksheetIndex = 1, uint startFrom = 1, uint skip = 0) where T : class
+    {
+        if (workbook == null || worksheetIndex < 1 || worksheetIndex > workbook.Worksheets.Count) return [];
+        
+        var reader = new ExcelReader(workbook);
+        return reader.Read<T>(worksheetIndex, startFrom, skip);
+    }
 
     public void Dispose()
     {
