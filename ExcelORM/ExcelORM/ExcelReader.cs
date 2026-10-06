@@ -117,8 +117,13 @@ public sealed class ExcelReader : IDisposable
     
     public static IEnumerable<T> ReadData<T>(string? path, string? worksheetName = null, uint startFrom = 1, uint skip = 0) where T : class
     {
-        var workbook = new XLWorkbook(path);
-        return ReadData<T>(workbook, worksheetName, startFrom, skip);
+        using var reader = new ExcelReader(path);
+        var worksheet = string.IsNullOrWhiteSpace(worksheetName) ? reader.xlWorkbook.Worksheets.FirstOrDefault()
+            : reader.xlWorkbook.Worksheets.FirstOrDefault(x => x.Name.Equals(worksheetName, StringComparison.InvariantCultureIgnoreCase));
+        if (worksheet == null) yield break;
+        
+        foreach (var row in reader.Read<T>(worksheet, startFrom, skip))
+            yield return row;
     }
     
     public static IEnumerable<T> ReadData<T>(IXLWorkbook? workbook, string? worksheetName, uint startFrom = 1, uint skip = 0) where T : class
