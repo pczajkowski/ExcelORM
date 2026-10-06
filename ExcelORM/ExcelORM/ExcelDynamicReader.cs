@@ -119,7 +119,7 @@ public sealed class ExcelDynamicReader : IDisposable
     
     public static IEnumerable<List<DynamicCell>> ReadData(IXLWorkbook? workbook, string? worksheetName, uint startFrom = 1, uint skip = 0)
     {
-        if (workbook == null) return [];
+        ArgumentNullException.ThrowIfNull(workbook);
         
         var worksheet = string.IsNullOrWhiteSpace(worksheetName) ? workbook.Worksheets.FirstOrDefault()
             : workbook.Worksheets.FirstOrDefault(x => x.Name.Equals(worksheetName, StringComparison.InvariantCultureIgnoreCase));
@@ -129,7 +129,8 @@ public sealed class ExcelDynamicReader : IDisposable
     
     public static IEnumerable<List<DynamicCell>> ReadData(IXLWorkbook? workbook, int worksheetIndex = 1, uint startFrom = 1, uint skip = 0)
     {
-        if (workbook == null || worksheetIndex < 1 || worksheetIndex > workbook.Worksheets.Count) return [];
+        ArgumentNullException.ThrowIfNull(workbook);
+        if (worksheetIndex < 1 || worksheetIndex > workbook.Worksheets.Count) return [];
         
         var reader = new ExcelDynamicReader(workbook);
         return reader.Read(worksheetIndex, startFrom, skip);
