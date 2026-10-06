@@ -143,7 +143,8 @@ public class ReaderTests
         var results = ExcelReader.ReadData<Test>(RegularFile).ToArray();
         Assert.NotEmpty(results);
         
-        var resultsWorkbook = ExcelReader.ReadData<Test>(new XLWorkbook(RegularFile)).ToArray();
+        using var workbook = new XLWorkbook(RegularFile);
+        var resultsWorkbook = ExcelReader.ReadData<Test>(workbook).ToArray();
         Assert.NotEmpty(resultsWorkbook);
         Assert.Equal(results, resultsWorkbook);
     }
