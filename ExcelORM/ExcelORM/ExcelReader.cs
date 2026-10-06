@@ -118,6 +118,13 @@ public sealed class ExcelReader : IDisposable
     public static IEnumerable<T> ReadData<T>(string? path, string? worksheetName = null, uint startFrom = 1, uint skip = 0) where T : class
     {
         var workbook = new XLWorkbook(path);
+        return ReadData<T>(workbook, worksheetName, startFrom, skip);
+    }
+    
+    public static IEnumerable<T> ReadData<T>(IXLWorkbook? workbook, string? worksheetName, uint startFrom = 1, uint skip = 0) where T : class
+    {
+        if (workbook == null) return [];
+        
         var worksheet = string.IsNullOrWhiteSpace(worksheetName) ? workbook.Worksheets.FirstOrDefault()
             : workbook.Worksheets.FirstOrDefault(x => x.Name.Equals(worksheetName, StringComparison.InvariantCultureIgnoreCase));
         
