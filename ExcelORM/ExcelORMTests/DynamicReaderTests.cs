@@ -58,4 +58,15 @@ public class DynamicReaderTests
         var results = reader.Read().ToArray();
         Assert.Empty(results);
     } 
+    
+    [Fact]
+    public void ReadData()
+    {
+        var results = ExcelDynamicReader.ReadData(RegularFile).ToArray();
+        Assert.NotEmpty(results);
+        
+        var resultsWorkbook = ExcelDynamicReader.ReadData(new XLWorkbook(RegularFile)).ToArray();
+        Assert.NotEmpty(resultsWorkbook);
+        Assert.Equal(results, resultsWorkbook);
+    }
 }
