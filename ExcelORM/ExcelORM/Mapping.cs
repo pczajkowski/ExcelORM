@@ -31,11 +31,11 @@ namespace ExcelORM
                 .ColumnNumber;
         }
         
-        public static List<Mapping>? MapProperties<T>(IXLCells? headerCells, bool fallbackToPropertyName = false) where T : class
+        public static List<Mapping> MapProperties<T>(IXLCells? headerCells, bool fallbackToPropertyName = false) where T : class
         {
-            if (headerCells == null || !headerCells.Any()) return null;
-
             var map = new List<Mapping>();
+            if (headerCells == null || !headerCells.Any()) return map;
+
             var properties = typeof(T).GetProperties();
             foreach (var property in properties)
             {
@@ -47,7 +47,7 @@ namespace ExcelORM
                 map.Add(new Mapping { PropertyName = property.Name, Position = position });
             }
 
-            return map.Count > 0 ? map : null;
+            return map;
         }
     }
 }

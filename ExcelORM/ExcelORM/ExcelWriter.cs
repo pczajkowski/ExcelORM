@@ -102,7 +102,7 @@ public sealed class ExcelWriter : IDisposable
         {
             var headerCells = headerRowIndex != null ? worksheet.Row((int)headerRowIndex).CellsUsed() : worksheet.FirstRowUsed()?.CellsUsed();
             mapping = Mapping.MapProperties<T>(headerCells, FallbackToPropertyName);
-            if (mapping == null || mapping.Count == 0) return;
+            if (mapping.Count == 0) return;
         }
 
         foreach (var value in values)

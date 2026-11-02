@@ -73,7 +73,7 @@ public sealed class ExcelReader : IDisposable
         if (firstRow == null || firstRow.IsEmpty()) yield break;
 
         var mapping = Mapping.MapProperties<T>(firstRow.CellsUsed(), FallbackToPropertyName);
-        if (mapping == null) yield break;
+        if (mapping.Count == 0) yield break;
 
         var rowsToProcess = (ObeyFilter && worksheet.AutoFilter.IsEnabled) switch
         {
