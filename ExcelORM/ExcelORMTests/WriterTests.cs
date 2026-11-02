@@ -406,5 +406,6 @@ public class WriterTests
         reader.FallbackToPropertyName = true;
         var results = reader.Read<Test>().ToArray();
         Assert.Equal(2, results.Length);
+        Assert.Equal(test, results[1]);
     }
 }
