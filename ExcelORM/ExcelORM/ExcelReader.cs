@@ -9,6 +9,7 @@ public sealed class ExcelReader : IDisposable
     private readonly IXLWorkbook xlWorkbook;
     public bool SkipHidden { get; set; }
     public bool ObeyFilter { get; set; }
+    public bool FallbackToPropertyName { get; set; }
 
     public ExcelReader(IXLWorkbook? workbook)
     {
@@ -71,7 +72,7 @@ public sealed class ExcelReader : IDisposable
         
         if (firstRow == null || firstRow.IsEmpty()) yield break;
 
-        var mapping = Mapping.MapProperties<T>(firstRow.CellsUsed());
+        var mapping = Mapping.MapProperties<T>(firstRow.CellsUsed(), FallbackToPropertyName);
         if (mapping == null) yield break;
 
         var rowsToProcess = (ObeyFilter && worksheet.AutoFilter.IsEnabled) switch

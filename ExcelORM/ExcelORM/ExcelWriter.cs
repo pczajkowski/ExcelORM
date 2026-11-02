@@ -9,6 +9,8 @@ namespace ExcelORM;
 public sealed class ExcelWriter : IDisposable
 {
     private readonly IXLWorkbook xlWorkbook;
+    public bool FallbackToPropertyName { get; set; }
+    
     public ExcelWriter(string? path = null)
     {
         xlWorkbook = File.Exists(path) ? new XLWorkbook(path) : new XLWorkbook();
@@ -77,7 +79,7 @@ public sealed class ExcelWriter : IDisposable
         }
     }
 
-    private static void Write<T>(IEnumerable<T> values, IXLWorksheet worksheet, bool append, uint? headerRowIndex = null, uint? startFrom = null) where T : class
+    private void Write<T>(IEnumerable<T> values, IXLWorksheet worksheet, bool append, uint? headerRowIndex = null, uint? startFrom = null) where T : class
     {
         var properties = typeof(T).GetProperties();
         List<Mapping>? mapping = [];
@@ -99,7 +101,7 @@ public sealed class ExcelWriter : IDisposable
         if (append)
         {
             var headerCells = headerRowIndex != null ? worksheet.Row((int)headerRowIndex).CellsUsed() : worksheet.FirstRowUsed()?.CellsUsed();
-            mapping = Mapping.MapProperties<T>(headerCells);
+            mapping = Mapping.MapProperties<T>(headerCells, FallbackToPropertyName);
             if (mapping == null || mapping.Count == 0) return;
         }
 
