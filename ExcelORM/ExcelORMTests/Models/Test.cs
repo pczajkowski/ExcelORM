@@ -10,6 +10,6 @@ public record Test
     [Column("Last Name")]
     public string? Surname { get; set; }
 
-    [Column(new[]{"Occupation", "JoB"})]
+    [Column(["Occupation", "JoB"])]
     public string? Job { get; set; }
 }
