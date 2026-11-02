@@ -25,10 +25,10 @@ namespace ExcelORM
                 if (position != null || !fallbackToPropertyName) return position;
             }
             
-           return headerCells.FirstOrDefault(x =>
-                   !x.Value.IsBlank &&
-                   property.Name.Equals(x.Value.ToString(), StringComparison.InvariantCultureIgnoreCase))?.Address
-               .ColumnNumber;
+            return headerCells.FirstOrDefault(x =>
+                    !x.Value.IsBlank &&
+                    property.Name.Equals(x.Value.ToString(), StringComparison.InvariantCultureIgnoreCase))?.Address
+                .ColumnNumber;
         }
         
         public static List<Mapping>? MapProperties<T>(IXLCells? headerCells, bool fallbackToPropertyName = false) where T : class
