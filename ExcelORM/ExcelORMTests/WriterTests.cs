@@ -380,4 +380,31 @@ public class WriterTests
         
         File.Delete(testFile);
     }
+    
+    [Fact]
+    public void FallbackToPropertyName()
+    {
+        using var workbook = new XLWorkbook();
+        var worksheet = workbook.AddWorksheet("Test");
+        var firstRow = worksheet.FirstRow();
+        var secondRow = worksheet.Row(2);
+        var columnIndex = 1;
+        
+        foreach (var property in typeof(Test).GetProperties())
+        {
+            firstRow.Cell(columnIndex).Value = property.Name;
+            secondRow.Cell(columnIndex).Value = $"{columnIndex}";
+            columnIndex++;
+        }
+        
+        var test = new Test{ Name = $"{columnIndex++}", Surname = $"{columnIndex++}", Job = $"{columnIndex++}" };
+        var writer = new ExcelWriter(workbook);
+        writer.FallbackToPropertyName = true;
+        writer.Write([test], append: true);
+        
+        var reader = new ExcelReader(workbook);
+        reader.FallbackToPropertyName = true;
+        var results = reader.Read<Test>().ToArray();
+        Assert.Equal(2, results.Length);
+    }
 }
