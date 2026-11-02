@@ -397,7 +397,7 @@ public class WriterTests
             columnIndex++;
         }
         
-        var test = new Test{ Name = $"{columnIndex++}", Surname = $"{columnIndex++}", Job = $"{columnIndex++}" };
+        var test = new Test{ Name = $"{columnIndex++}", Surname = $"{columnIndex++}", Job = $"{columnIndex}" };
         var writer = new ExcelWriter(workbook);
         writer.FallbackToPropertyName = true;
         writer.Write([test], append: true);
