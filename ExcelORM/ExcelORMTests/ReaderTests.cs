@@ -12,6 +12,7 @@ public class ReaderTests
     private const string DifferentTypesFile = "testFiles/differentTypes.xlsx";
     private const string WithFormulaFile = "testFiles/withFormula.xlsx";
     private const string AdditionalTypes = "testFiles/additionalTypes.xlsx";
+    private const string FallBackToPropertyName = "testFiles/fallBackToPropertyName.xlsx";
     
     [Fact]
     public void Read()
@@ -147,5 +148,24 @@ public class ReaderTests
         var resultsWorkbook = ExcelReader.ReadData<Test>(workbook).ToArray();
         Assert.NotEmpty(resultsWorkbook);
         Assert.Equal(results, resultsWorkbook);
+    }
+    
+    [Fact]
+    public void FallbackToPropertyName()
+    {
+        using var reader = new ExcelReader(FallBackToPropertyName);
+        var resultsNoFallback = reader.Read<Test>().ToArray();
+        Assert.NotEmpty(resultsNoFallback);
+        
+        reader.FallbackToPropertyName = true;
+        var resultsFallback = reader.Read<Test>().ToArray();
+        Assert.NotEmpty(resultsFallback);
+        
+        for (var i = 0; i < resultsNoFallback.Length; i++)
+        {
+            Assert.NotEqual(resultsNoFallback[i].Name, resultsFallback[i].Name);
+            Assert.Equal(resultsNoFallback[i].Surname, resultsFallback[i].Surname);
+            Assert.Equal(resultsNoFallback[i].Job, resultsFallback[i].Job);
+        }
     }
 }

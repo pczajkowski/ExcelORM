@@ -1,6 +1,5 @@
 using ExcelORM;
 using ExcelORM.Models;
-using ClosedXML.Excel;
 
 namespace ExcelORMTests;
 
