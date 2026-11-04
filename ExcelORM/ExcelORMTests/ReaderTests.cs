@@ -5,6 +5,7 @@ namespace ExcelORMTests;
 public class ReaderTests
 {
     private const string RegularFile = "testFiles/first.xlsx";
+    private const string RegularFileNoAttributes = "testFiles/firstNoAttributes.xlsx";
     private const string HiddenFile = "testFiles/hidden.xlsx";
     private const string FilteredFile = "testFiles/filtered.xlsx";
     private const string DifficultFile = "testFiles/columnsOnTheLeftHeaderNotFirstRow.xlsx";
@@ -13,7 +14,7 @@ public class ReaderTests
     private const string WithFormulaFile = "testFiles/withFormula.xlsx";
     private const string AdditionalTypes = "testFiles/additionalTypes.xlsx";
     private const string FallBackToPropertyName = "testFiles/fallBackToPropertyName.xlsx";
-    
+
     [Fact]
     public void Read()
     {
@@ -21,7 +22,7 @@ public class ReaderTests
         var results = reader.Read<Test>().ToArray();
         Assert.NotEmpty(results);
     }
-    
+
     [Fact]
     public void ReadHidden()
     {
@@ -34,7 +35,7 @@ public class ReaderTests
         Assert.NotEmpty(resultsHidden);
         Assert.NotEqual(results.Length, resultsHidden.Length);
     }
-    
+
     [Fact]
     public void ReadFiltered()
     {
@@ -47,7 +48,7 @@ public class ReaderTests
         Assert.NotEmpty(resultsFiltered);
         Assert.NotEqual(results.Length, resultsFiltered.Length);
     }
-    
+
     [Fact]
     public void ReadDifficult()
     {
@@ -64,7 +65,7 @@ public class ReaderTests
         Assert.All(resultsBadHeader, x => Assert.Null(x.Surname));
         Assert.All(resultsBadHeader, x => Assert.NotNull(x.Job));
     }
-    
+
     [Fact]
     public void ReadMultipleSheets()
     {
@@ -73,7 +74,7 @@ public class ReaderTests
         Assert.NotEmpty(results);
         Assert.Equal(6, results.Length);
     }
-    
+
     [Fact]
     public void ReadDifferentTypes()
     {
@@ -111,7 +112,7 @@ public class ReaderTests
         var results = reader.Read<TestWithFormula>().ToArray();
         Assert.NotEmpty(results);
     }
-    
+
     [Fact]
     public void ReadAdditionalTypes()
     {
@@ -119,7 +120,7 @@ public class ReaderTests
         var results = reader.Read<TestAdditionalTypes>().ToArray();
         Assert.NotEmpty(results);
     }
-    
+
     [Fact]
     public void ReadAdditionalTypesNullable()
     {
@@ -127,9 +128,9 @@ public class ReaderTests
         var results = reader.Read<TestAdditionalTypesNullable>().ToArray();
         Assert.NotEmpty(results);
     }
-    
+
     private const string EmptyFileForAppend = "testFiles/emptyForAppend.xlsx";
-    
+
     [Fact]
     public void ReadEmptyFile()
     {
@@ -137,35 +138,54 @@ public class ReaderTests
         var results = reader.Read<Test>().ToArray();
         Assert.Empty(results);
     }
-    
+
     [Fact]
     public void ReadData()
     {
         var results = ExcelReader.ReadData<Test>(RegularFile).ToArray();
         Assert.NotEmpty(results);
-        
+
         using var workbook = new XLWorkbook(RegularFile);
         var resultsWorkbook = ExcelReader.ReadData<Test>(workbook).ToArray();
         Assert.NotEmpty(resultsWorkbook);
         Assert.Equal(results, resultsWorkbook);
     }
-    
+
     [Fact]
     public void FallbackToPropertyName()
     {
         using var reader = new ExcelReader(FallBackToPropertyName);
         var resultsNoFallback = reader.Read<Test>().ToArray();
         Assert.NotEmpty(resultsNoFallback);
-        
+
         reader.FallbackToPropertyName = true;
         var resultsFallback = reader.Read<Test>().ToArray();
         Assert.NotEmpty(resultsFallback);
-        
+
         for (var i = 0; i < resultsNoFallback.Length; i++)
         {
             Assert.NotEqual(resultsNoFallback[i].Name, resultsFallback[i].Name);
             Assert.Equal(resultsNoFallback[i].Surname, resultsFallback[i].Surname);
             Assert.Equal(resultsNoFallback[i].Job, resultsFallback[i].Job);
+        }
+    }
+    
+    [Fact]
+    public void ReadNoAttributes()
+    {
+        using var reader = new ExcelReader(RegularFile);
+        var results = reader.Read<Test>().ToArray();
+        Assert.NotEmpty(results);
+        
+        using var readerNoAttributes = new ExcelReader(RegularFileNoAttributes);
+        var resultsNoAttributes = readerNoAttributes.Read<TestNoAttributes>().ToArray();
+        Assert.NotEmpty(resultsNoAttributes);
+        
+        for (var i = 0; i < results.Length; i++)
+        {
+            Assert.Equal(results[i].Name, resultsNoAttributes[i].name);
+            Assert.Equal(results[i].Surname, resultsNoAttributes[i].SurName);
+            Assert.Equal(results[i].Job, resultsNoAttributes[i].joB);
         }
     }
 }
