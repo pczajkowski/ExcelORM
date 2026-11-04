@@ -18,7 +18,7 @@ namespace ExcelORM
                 if (columnAttributeObject is ColumnAttribute { Names.Length: > 0 } columnAttribute)
                 {
                     position = headerCells.FirstOrDefault(x => !x.Value.IsBlank && Array.Exists(columnAttribute.Names,
-                            y => y.Equals(x.Value.ToString(), StringComparison.InvariantCultureIgnoreCase)))?.Address
+                            y => y.Equals(x.Value.ToString(), StringComparison.OrdinalIgnoreCase)))?.Address
                         .ColumnNumber;
                 }
                 
@@ -27,7 +27,7 @@ namespace ExcelORM
             
             return headerCells.FirstOrDefault(x =>
                     !x.Value.IsBlank &&
-                    property.Name.Equals(x.Value.ToString(), StringComparison.InvariantCultureIgnoreCase))?.Address
+                    property.Name.Equals(x.Value.ToString(), StringComparison.OrdinalIgnoreCase))?.Address
                 .ColumnNumber;
         }
         
