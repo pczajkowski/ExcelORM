@@ -188,4 +188,27 @@ public class ReaderTests
             Assert.Equal(results[i].Job, resultsNoAttributes[i].joB);
         }
     }
+    
+    [Fact]
+    public void ReadNoAttributesWithSkip()
+    {
+        using var reader = new ExcelReader(RegularFile);
+        var results = reader.Read<TestWithSkip>().ToArray();
+        Assert.NotEmpty(results);
+        
+        using var readerNoAttributes = new ExcelReader(RegularFileNoAttributes);
+        var resultsNoAttributes = readerNoAttributes.Read<TestNoAttributesWithSkip>().ToArray();
+        Assert.NotEmpty(resultsNoAttributes);
+        
+        for (var i = 0; i < results.Length; i++)
+        {
+            Assert.Equal(results[i].Name, resultsNoAttributes[i].name);
+            
+            Assert.Equal(results[i].Surname, resultsNoAttributes[i].SurName);
+            Assert.Null(results[i].Surname);
+            Assert.Null(resultsNoAttributes[i].SurName);
+            
+            Assert.Equal(results[i].Job, resultsNoAttributes[i].joB);
+        }
+    }
 }
