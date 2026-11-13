@@ -62,4 +62,16 @@ public class TypeExtensionsTests
         Assert.IsType<TestEnum>(readValue);
         Assert.NotEqual(TestEnum.First, readValue);
     }
+    
+    [Fact]
+    public void GetTextQuotePrefix()
+    {
+        XLWorkbook wb = new();
+        var ws = wb.Worksheets.Add("Sheet1");
+        var cell = ws.Cell(1, 1).SetValue("Test");
+        cell.Style.SetIncludeQuotePrefix();
+        
+        var value = cell.GetTextQuotePrefix();
+        Assert.Equal("'Test", value);
+    }
 }
