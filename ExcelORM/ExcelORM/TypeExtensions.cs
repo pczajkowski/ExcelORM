@@ -28,33 +28,33 @@ public static class TypeExtensions
             ? enumValue : Enum.GetValues(property.PropertyType).GetValue(0);
     }
 
-    private static object? GetAdditionalTypeFromText(XLCellValue value, PropertyInfo? property = null)
+    private static object? GetAdditionalTypeFromText(IXLCell cell, PropertyInfo? property = null)
     {
-        if (property == null) return value.GetText();
+        if (property == null) return cell.GetTextQuotePrefix();
 
         var pt = property.PropertyType;
         switch (pt)
         {
             case var _ when pt == typeof(Guid) || pt == typeof(Guid?):
-                return HandleGuid(value, property);
+                return HandleGuid(cell.Value, property);
             case var _ when pt == typeof(DateTime):
-                if (DateTime.TryParse(value.GetText(), out var dateValueNotNull)) return dateValueNotNull;
+                if (DateTime.TryParse(cell.GetTextQuotePrefix(), out var dateValueNotNull)) return dateValueNotNull;
                 break;
             case var _ when pt == typeof(DateTime?):
-                if (DateTime.TryParse(value.GetText(), out var dateValue)) return dateValue;
+                if (DateTime.TryParse(cell.GetTextQuotePrefix(), out var dateValue)) return dateValue;
                 return null;
             case var _ when pt == typeof(DateOnly):
-                if (DateOnly.TryParse(value.GetText(), out var dateOnlyValueNotNull)) return dateOnlyValueNotNull;
+                if (DateOnly.TryParse(cell.GetTextQuotePrefix(), out var dateOnlyValueNotNull)) return dateOnlyValueNotNull;
                 break;
             case var _ when pt == typeof(DateOnly?):
-                if (DateOnly.TryParse(value.GetText(), out var dateOnlyValue)) return dateOnlyValue;
+                if (DateOnly.TryParse(cell.GetTextQuotePrefix(), out var dateOnlyValue)) return dateOnlyValue;
                 return null;
             case { IsEnum: true }:
             case var _ when Nullable.GetUnderlyingType(pt) is { IsEnum: true }:
-                return HandleEnum(value, property, Nullable.GetUnderlyingType(property.PropertyType));
+                return HandleEnum(cell.Value, property, Nullable.GetUnderlyingType(property.PropertyType));
         }
 
-        return value.GetText();
+        return cell.GetTextQuotePrefix();
     }
 
     private static object? GetSpecificNumberType(XLCellValue value, PropertyInfo? property)
@@ -81,24 +81,24 @@ public static class TypeExtensions
     }
 
     // Borrowed from https://github.com/ClosedXML/ClosedXML/blob/develop/ClosedXML/Excel/XLCellValue.cs#L361
-    public static object? ToObject(this XLCellValue value, PropertyInfo? property = null)
+    public static object? ToObject(this IXLCell cell, PropertyInfo? property = null)
     {
-        return value.Type switch
+        return cell.Value.Type switch
         {
             XLDataType.Blank => null,
-            XLDataType.Boolean => value.GetBoolean(),
-            XLDataType.Number => GetSpecificNumberType(value, property),
-            XLDataType.Text => GetAdditionalTypeFromText(value, property),
-            XLDataType.Error => value.GetError(),
-            XLDataType.DateTime => value.GetDateTime(),
-            XLDataType.TimeSpan => value.GetTimeSpan(),
+            XLDataType.Boolean => cell.Value.GetBoolean(),
+            XLDataType.Number => GetSpecificNumberType(cell.Value, property),
+            XLDataType.Text => GetAdditionalTypeFromText(cell, property),
+            XLDataType.Error => cell.Value.GetError(),
+            XLDataType.DateTime => cell.Value.GetDateTime(),
+            XLDataType.TimeSpan => cell.Value.GetTimeSpan(),
             _ => throw new InvalidCastException()
         };
     }
 
-    public static void SetPropertyValue<T>(this T currentObject, PropertyInfo property, XLCellValue value)
+    public static void SetPropertyValue<T>(this T currentObject, PropertyInfo property, IXLCell cell)
     {
-        var valueToSet = value.ToObject(property);
+        var valueToSet = cell.ToObject(property);
 
         try
         {
@@ -109,22 +109,30 @@ public static class TypeExtensions
             // If the property type is string, try to set it directly from the XLCellValue's string representation.
             if (property.PropertyType == typeof(string))
             {
-                property.SetValue(currentObject, value.ToString());
+                property.SetValue(currentObject, cell.GetTextQuotePrefix());
             }
             else
             {
                 // If it's not a string property, and the initial assignment failed,
                 // re-throw with more context.
-                throw new InvalidCastException($"Could not set property '{property.Name}' of type '{property.PropertyType.Name}' with value '{valueToSet}' (original XLCellValue: '{value}'). " +
+                throw new InvalidCastException($"Could not set property '{property.Name}' of type '{property.PropertyType.Name}' with value '{valueToSet}' (original XLCellValue: '{cell.Value}'). " +
                                                $"The value returned by ToObject was incompatible, and the property type is not string for fallback conversion. See inner exception for details.", ex);
             }
         }
         catch (Exception ex) // Catch any other unexpected exceptions from SetValue
         {
             throw new InvalidOperationException($"An unexpected error occurred while setting property '{property.Name}' of type '{property.PropertyType.Name}'. " +
-                                                $"Value attempted to set: '{valueToSet}' (original XLCellValue: '{value}'). See inner exception for details.", ex);
+                                                $"Value attempted to set: '{valueToSet}' (original XLCellValue: '{cell.Value}'). See inner exception for details.", ex);
         }
     }
 
     public static bool Skip(this PropertyInfo property) => property.GetCustomAttributes(typeof(SkipAttribute), false).FirstOrDefault() != null;
+    
+    public static string GetTextQuotePrefix(this IXLCell? cell)
+    {
+        if (cell == null) return string.Empty;
+
+        var value = cell.GetString();
+        return cell.Style.IncludeQuotePrefix ? $"'{value}" : value;
+    }
 }

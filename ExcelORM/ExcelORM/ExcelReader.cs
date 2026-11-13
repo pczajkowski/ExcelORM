@@ -50,7 +50,7 @@ public sealed class ExcelReader : IDisposable
                         continue;
                     }
 
-                    current.SetPropertyValue(property, cell.Value);
+                    current.SetPropertyValue(property, cell);
                 }
                 catch (ArgumentException e)
                 {

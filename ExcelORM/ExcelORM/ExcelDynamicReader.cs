@@ -37,7 +37,7 @@ public sealed class ExcelDynamicReader : IDisposable
 
                 var cellItem = item with
                 {
-                    Value = cell.Value.ToObject()
+                    Value = cell.ToObject()
                 };
 
                 dynamicRow.Add(cellItem);

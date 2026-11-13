@@ -9,7 +9,7 @@ namespace ExcelORM.Models
         public override void SetCellValue(IXLCell cell) => cell.FormulaA1 = FormulaA1;
         public override void GetValueFromCell(IXLCell cell)
         {
-            Value = cell.Value.ToObject();
+            Value = cell.ToObject();
             if (cell.HasFormula) FormulaA1 = cell.FormulaA1;
         }
     }

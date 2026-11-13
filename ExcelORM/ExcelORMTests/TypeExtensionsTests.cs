@@ -10,10 +10,12 @@ public class TypeExtensionsTests
     [Fact]
     public void ToObject_DateTimeAsString()
     {
-        XLCellValue value = "7/27/2025";
+        XLWorkbook wb = new();
+        var ws = wb.Worksheets.Add("Sheet1");
+        var cell = ws.Cell(1, 1).SetValue("7/27/2025");
         
         var propertyInfo = typeof(TypeExtensionsTests).GetProperty("DateTimeProperty");
-        var readValue = value.ToObject(propertyInfo);
+        var readValue = cell.ToObject(propertyInfo);
         Assert.IsType<DateTime>(readValue);
     }
     
@@ -22,10 +24,12 @@ public class TypeExtensionsTests
     [Fact]
     public void ToObject_DateOnlyAsString()
     {
-        XLCellValue value = "7/27/2025";
+        XLWorkbook wb = new();
+        var ws = wb.Worksheets.Add("Sheet1");
+        var cell = ws.Cell(1, 1).SetValue("7/27/2025");
         
         var propertyInfo = typeof(TypeExtensionsTests).GetProperty("DateOnlyProperty");
-        var readValue = value.ToObject(propertyInfo);
+        var readValue = cell.ToObject(propertyInfo);
         Assert.IsType<DateOnly>(readValue);
     }
      
@@ -34,10 +38,12 @@ public class TypeExtensionsTests
     [Fact]
     public void ToObject_GuidAsString()
     {
-        XLCellValue value = "00000000-0000-0000-0000-000000000001";
+        XLWorkbook wb = new();
+        var ws = wb.Worksheets.Add("Sheet1");
+        var cell = ws.Cell(1, 1).SetValue("00000000-0000-0000-0000-000000000001");
         
         var propertyInfo = typeof(TypeExtensionsTests).GetProperty("GuidProperty");
-        var readValue = value.ToObject(propertyInfo);
+        var readValue = cell.ToObject(propertyInfo);
         Assert.IsType<Guid>(readValue);
         Assert.NotEqual(Guid.Empty, readValue);
     }
@@ -47,10 +53,12 @@ public class TypeExtensionsTests
     [Fact]
     public void ToObject_EnumAsString()
     {
-        XLCellValue value = "Second";
+        XLWorkbook wb = new();
+        var ws = wb.Worksheets.Add("Sheet1");
+        var cell = ws.Cell(1, 1).SetValue("Second");
         
         var propertyInfo = typeof(TypeExtensionsTests).GetProperty("EnumProperty");
-        var readValue = value.ToObject(propertyInfo);
+        var readValue = cell.ToObject(propertyInfo);
         Assert.IsType<TestEnum>(readValue);
         Assert.NotEqual(TestEnum.First, readValue);
     }

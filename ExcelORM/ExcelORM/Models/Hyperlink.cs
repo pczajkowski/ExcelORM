@@ -14,7 +14,7 @@ namespace ExcelORM.Models
 
         public override void GetValueFromCell(IXLCell cell)
         {
-            Value = cell.Value.ToObject();
+            Value = cell.ToObject();
             if (cell.HasHyperlink) Link = cell.GetHyperlink();
         }
     }
