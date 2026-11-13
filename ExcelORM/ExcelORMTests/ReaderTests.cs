@@ -211,4 +211,20 @@ public class ReaderTests
             Assert.Equal(results[i].Job, resultsNoAttributes[i].joB);
         }
     }
+    
+    [Fact]
+    public void ReadIncludeQuotePrefix()
+    {
+        using var workbook = new XLWorkbook();
+        var worksheet = workbook.Worksheets.Add("Sheet1");
+        
+        worksheet.Cell(1, 1).Value = nameof(Test.Name);
+        worksheet.Cell(2, 1).Value = "Test";
+        worksheet.Cell(2, 1).Style.SetIncludeQuotePrefix();
+
+        var reader = new ExcelReader(workbook);
+        reader.FallbackToPropertyName = true;
+        var results = reader.Read<Test>().ToArray();
+        Assert.Equal("'Test", results[0].Name);
+    }
 }
