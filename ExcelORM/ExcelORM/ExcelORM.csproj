@@ -14,7 +14,7 @@
 	<Authors>Piotr Czajkowski</Authors>
 	<Description>Simple library to read/write C# objects from/to Excel files. </Description>
 	<RepositoryType>GitHub</RepositoryType>
-	<PackageReleaseNotes>Using .NET 10 and added FallbackToPropertyName.</PackageReleaseNotes>
+	<PackageReleaseNotes>Using .NET 10. Added FallbackToPropertyName and a workaround for reading strings starting with single quote.</PackageReleaseNotes>
     </PropertyGroup>
 
     <ItemGroup>
