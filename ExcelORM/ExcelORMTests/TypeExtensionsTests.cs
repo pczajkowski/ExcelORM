@@ -66,7 +66,7 @@ public class TypeExtensionsTests
     [Fact]
     public void GetTextQuotePrefix()
     {
-        XLWorkbook wb = new();
+        using XLWorkbook wb = new();
         var ws = wb.Worksheets.Add("Sheet1");
         var cell = ws.Cell(1, 1).SetValue("Test");
         cell.Style.SetIncludeQuotePrefix();
