@@ -132,7 +132,10 @@ public static class TypeExtensions
     {
         if (cell == null) return string.Empty;
 
-        var value = cell.GetString();
-        return cell.Style.IncludeQuotePrefix ? $"'{value}" : value;
+        var text = cell.GetString();
+        if (!cell.Value.IsText) return text;
+        if (text.Length == 0) return string.Empty;
+        
+        return cell.Style.IncludeQuotePrefix ? $"'{text}" : text;
     }
 }
