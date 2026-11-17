@@ -7,7 +7,7 @@ namespace ExcelORM;
 
 public static class TypeExtensions
 {
-    private static object? HandleGuid(XLCellValue value, PropertyInfo property)
+    private static Guid? HandleGuid(XLCellValue value, PropertyInfo property)
     {
         if (Guid.TryParse(value.GetText(), out var guid))
             return guid;
