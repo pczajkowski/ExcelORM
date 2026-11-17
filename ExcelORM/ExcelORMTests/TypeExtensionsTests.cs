@@ -1,5 +1,3 @@
-using ExcelORM;
-
 namespace ExcelORMTests;
 
 public class TypeExtensionsTests

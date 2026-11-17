@@ -1,6 +1,3 @@
-using ExcelORM;
-using ExcelORM.Models;
-
 namespace ExcelORMTests;
 
 public class WriterTests
