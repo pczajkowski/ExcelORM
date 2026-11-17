@@ -1,4 +1,3 @@
-using ClosedXML.Excel;
 using ExcelORM;
 
 namespace ExcelORMTests;
