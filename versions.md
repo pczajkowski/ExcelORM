@@ -10,4 +10,5 @@
 | 2.7.0 | Added support for reading properties of type Guid and enum.|
 | 2.8.0 | Handling more number types. Properly handling appending to and reading from empty file.|
 | 3.0.0 | Ability to start writing from given row. Trying to handle dates saved as text without throwing.|
-| 3.1.0 | Added static ReadData methods for quick access.
+| 3.1.0 | Added static ReadData methods for quick access.|
+| 3.2.0 | Using .NET 10. Added FallbackToPropertyName and a workaround for reading strings starting with single quote.|
